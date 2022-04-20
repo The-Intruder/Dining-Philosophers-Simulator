@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   err_utils.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnaimi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,29 +10,37 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo_head.h"
+#include "../../philo_head.h"
 
 /* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
-void	ft_perror(int type, char *location, char *cause)
+char	*ft_strjoin(char const *s1, char const *s2, char sep)
 {
-	if (type == 1)
-		write(2, RED"Error"NNN, 14);
-	else if (type == 2)
-		write(2, YEL"Warning"NNN, 14);
-	write(2, "\tLocation:  ", 12);
-	write(2, location, ft_strlen(location));
-	write(2, "\n     \tCause:  ", 15);
-	write(2, cause, ft_strlen(cause));
-	write(2, "\n", 1);
+	size_t	i;
+	char	*output_str;
+	size_t	output_i;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = ft_strlen(s1) + ft_strlen(s2);
+	if (i == 0)
+		return ((char *)ft_calloc(sizeof(char), 1));
+	if (sep)
+		++i;
+	output_str = (char *) ft_calloc(sizeof(char), i + 1);
+	if (!output_str)
+		return (NULL);
+	i = 0;
+	output_i = 0;
+	while (s1[i])
+		output_str[output_i++] = s1[i++];
+	i = 0;
+	if (sep)
+		output_str[output_i++] = sep;
+	while (s2[i])
+		output_str[output_i++] = s2[i++];
+	output_str[output_i] = '\0';
+	return (output_str);
 }
 
 /* -------------------------------------------------------------------------- */

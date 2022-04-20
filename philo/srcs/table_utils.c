@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lst_utils.c                                        :+:      :+:    :+:   */
+/*   table_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnaimi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -21,10 +21,10 @@ static t_philo	*new_philo(size_t philo_index)
 
 	philo = (t_philo *)ft_calloc(1, sizeof(t_philo));
 	if (philo == NULL)
-		return (ft_perror(1, "new_philo", "malloc failure"), NULL);
+		return (ft_perror(1, "new_philo", "Malloc Failure"), NULL);
 	philo->next = NULL;
 	philo->indx = philo_index;
-	pthread_err = pthread_create(&philo->fork, NULL, &routine, (void *)philo);
+	pthread_err = pthread_create(&philo->fork, NULL, NULL, (void *)philo);
 	pthread_err = pthread_mutex_init(&philo->fork, NULL);
 	philo->prev = NULL;
 	return (philo);
@@ -55,18 +55,18 @@ t_table	*init_table(size_t philo_count)
 {
 	size_t	i;
 	t_philo	*philo;
-	t_table *table;
+	t_table	*table;
 
 	if (philo_count == 0)
-		return (ft_perror(2, "init_table", "philo_count is zero"), NULL);
+		return (ft_perror(2, "init_table", "'philo_count' is Zero"), NULL);
 	table = (t_table *)ft_calloc(1, sizeof(t_table));
 	if (table == NULL)
-		return (ft_perror(1, "init_table", "malloc failure"), NULL);
+		return (ft_perror(1, "init_table", "Malloc Failure"), NULL);
 	while (i++ < philo_count)
 	{
 		philo = new_philo(i);
 		if (philo == NULL)
-			return (NULL);
+			return (free_table(table), NULL);
 		add_philo(table, philo);
 	}
 	return (table);
@@ -81,7 +81,7 @@ void	iter_table(t_table *table, void (*function)(t_philo *))
 
 	if (table == NULL || function == NULL || table->head == NULL || \
 		table->tail == NULL || table->size == 0)
-		return (ft_perror(2, "iter_table", "empty argument"));
+		return (ft_perror(2, "iter_table", "Empty Argument"));
 	i = 0;
 	philo = table->head;
 	while (i++ < table->size)

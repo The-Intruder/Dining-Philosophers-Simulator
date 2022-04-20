@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_acts.c                                       :+:      :+:    :+:   */
+/*   philo_actvts.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnaimi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,52 +10,74 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../philo_head.h"
+#include "../philo_head.h"
 
 /* -------------------------------------------------------------------------- */
 
-void	philo_eat(t_philo *philo, t_uint time_to_eat)
+int	philo_eat(t_philo *philo, t_uint time_to_eat)
 {
-	philo->actn &= EAT;
+	int	err;
+
+	philo->stat &= EAT;
 	usleep(time_to_eat);
+	philo->stat = 0;
+	if (err != 0)
+		return (ft_perror(1, "philo_think", "usleep failure"), 1);
+	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void	philo_sleep(t_philo *philo, t_uint time_to_sleep)
+int	philo_sleep(t_philo *philo, t_uint time_to_sleep)
 {
-	philo->actn &= SLP;
+	int	err;
+
+	philo->stat &= SLP;
 	usleep(time_to_sleep);
+	philo->stat = 0;
+	if (err != 0)
+		return (ft_perror(1, "philo_think", "usleep failure"), 1);
+	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void	philo_think(t_philo *philo, t_uint time_to_think)
+int	philo_think(t_philo *philo, t_uint time_to_think)
 {
-	philo->actn &= THK;
+	int	err;
+
+	philo->stat &= THK;
 	usleep(time_to_think);
+	philo->stat = 0;
+	if (err != 0)
+		return (ft_perror(1, "philo_think", "usleep failure"), 1);
+	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void	philo_take_fork(t_philo *philo, pthread_mutex_t *fork)
+int	philo_take_fork(pthread_mutex_t *fork)
 {
 	int	err;
 
 	err = pthread_mutex_lock(fork);
 	if (err != 0)
-		ft_perror(1, "philo_take_fork", "unsuccessful mutex locking");
+		return (ft_perror(1, "philo_take_fork", \
+			"Unsuccessful Mutex Locking"), 1);
+	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-void	philo_put_fork(t_philo *philo, pthread_mutex_t *fork)
+int	philo_put_fork(pthread_mutex_t *fork)
 {
 	int	err;
 
 	err = pthread_mutex_unlock(fork);
 	if (err != 0)
-		ft_perror(1, "philo_put_fork", "unsuccessful mutex unlocking");
+		return (ft_perror(1, "philo_put_fork", \
+			"Unsuccessful Mutex Unlocking"), 1);
+	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
