@@ -33,12 +33,12 @@ static	void	cal_words_n_repl(char *s, size_t s_len, char c, size_t *words)
 
 /* -------------------------------------------------------------------------- */
 
-static	void	free_mem(char **ptr_arr, size_t wrds)
+void	free_2d_arr(char **ptr_arr)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < wrds)
+	while (ptr_arr[i])
 		free(ptr_arr[i++]);
 	free(ptr_arr);
 }
@@ -56,7 +56,7 @@ static	char	**alloc_str(const char *s, size_t wrds, size_t len, char **ptr)
 	{
 		ptr[i++] = ft_strdup(&s[j]);
 		if (ptr == NULL)
-			return (free_mem(ptr, wrds), (char **)ft_calloc(1, sizeof(char *)));
+			return (free_2d_arr(ptr), (char **)ft_calloc(1, sizeof(char *)));
 		while (j++ < len)
 			if (s[j] && !s[j - 1])
 				break ;

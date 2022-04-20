@@ -16,9 +16,21 @@
 
 /* -------------------------------------------------------------------------- */
 
+void	init_table_vars(t_table *table, int64_t value, size_t var_numb)
+{
+	if (var_numb == 2)
+		table->time_to_die = value;
+	else if (var_numb == 3)
+		table->time_to_eat = value;
+	else if (var_numb == 4)
+		table->time_to_slp = value;
+	else if (var_numb == 5)
+		table->count_to_eat = value;
+}
+
 /* -------------------------------------------------------------------------- */
 
-char	**join_split_args(int argc, char **argv)
+static char	**join_split_args(int argc, char **argv)
 {
 	size_t	i;
 	void	*ptr;
@@ -45,7 +57,7 @@ char	**join_split_args(int argc, char **argv)
 
 /* -------------------------------------------------------------------------- */
 
-int	valid_arg(char *arg)
+static int	valid_arg(char *arg)
 {
 	size_t	i;
 
@@ -53,9 +65,8 @@ int	valid_arg(char *arg)
 	while (arg[i])
 	{
 		if ((i == 0 && arg[i] != '+' && !ft_isdigit(arg[i])) || \
-			(i != 0 && !ft_isdigit(arg[i])))
+			(i != 0 && !ft_isdigit(arg[i++])))
 			return (ft_perror(1, "valid_arg", "Invalid Argument"), 0);
-		printf("Hello\n");
 		++i;
 	}
 	return (1);
@@ -63,17 +74,31 @@ int	valid_arg(char *arg)
 
 /* -------------------------------------------------------------------------- */
 
-t_table	*read_args(int argc, char **argv)
+t_table	*init_args_to_table(int argc, char **argv)
 {
-	char	**n_argv;
+	char	**new_argv;
+	t_table	*table;
+	int64_t	value;
 	size_t	i;
 
 	if (argc <= 1)
-		return (ft_perror(1, "read_args", "Not enough arguments"), NULL);
-	n_argv = join_split_args(argc, argv);
+		return (ft_perror(1, "init_arg...", "Not enough arguments"), NULL);
+	new_argv = join_split_args(argc, argv);
 	i = 0;
-	while (n_argv[i] && valid_arg(n_argv[i]))
-		++i;
+	table = NULL;
+	while (new_argv[i] && valid_arg(new_argv[i]))
+	{
+		if (i >= 5)
+			return (ft_perror(1, "init_arg...", "Too many Arguments"), NULL);
+		value = ft_custom_atoll(new_argv[i++]);
+		if (value <= 0)
+			return (ft_perror(1, "init_args_to_table", "Invalid Argument"), \
+				free_table(table), free_2d_arr(new_argv), NULL);
+		else if (i == 1)
+			table = init_table((size_t)value);
+		else
+			init_table_vars(table, value, i);
+	}
 	return (NULL);
 }
 

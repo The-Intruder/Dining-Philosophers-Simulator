@@ -14,12 +14,15 @@
 # define PHILO_HEAD_H
 
 /* ---------------------------------- Libraries ----------------------------- */
+// Functions & Functionalities //
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
+// Macros & Typedefs //
 # include <stdint.h>
 # include <stdbool.h>
+# include <limits.h>
 
 /* ----------------------------------- Macros ------------------------------- */
 // Color Codes //
@@ -55,11 +58,10 @@ typedef struct s_table {
 	t_philo	*head;
 	t_philo	*tail;
 	size_t	size;
-	t_uint	time_to_eat;
-	t_uint	time_to_thk;
-	t_uint	time_to_slp;
-	t_uint	time_to_die;
-	size_t	count_to_eat;
+	int64_t	time_to_eat;
+	int64_t	time_to_slp;
+	int64_t	time_to_die;
+	int64_t	count_to_eat;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */
@@ -70,10 +72,11 @@ void	ft_bzero(void *s, size_t n);
 void	*ft_calloc(size_t count, size_t size);
 char	*ft_strdup(const char *src);
 char	**ft_split(char const *s, char c);
+void	free_2d_arr(char **ptr_arr);
 char	*ft_strjoin(char const *s1, char const *s2, char sep);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strcpy(char *dest, const char *src);
-int		ft_atoi(const char *str);
+int64_t	ft_custom_atoll(const char *str);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 int		ft_isascii(int c);
@@ -84,8 +87,12 @@ int		ft_tolower(int c);
 int		ft_toupper(int c);
 
 // args_pars //
-char	**join_split_args(int argc, char **argv);
-t_table	*read_args(int argc, char **argv);
+t_table	*init_args_to_table(int argc, char **argv);
+
+// table_utils //
+t_table	*init_table(size_t philo_count);
+void	iter_table(t_table *table, void (*function)(t_philo *));
+void	free_table(t_table *table);
 
 // err_utils //
 void	ft_perror(int type, char *location, char *cause);

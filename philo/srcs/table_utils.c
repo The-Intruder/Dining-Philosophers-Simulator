@@ -24,7 +24,7 @@ static t_philo	*new_philo(size_t philo_index)
 		return (ft_perror(1, "new_philo", "Malloc Failure"), NULL);
 	philo->next = NULL;
 	philo->indx = philo_index;
-	pthread_err = pthread_create(&philo->fork, NULL, NULL, (void *)philo);
+	//pthread_err = pthread_create(&philo->fork, NULL, NULL, (void *)philo);
 	pthread_err = pthread_mutex_init(&philo->fork, NULL);
 	philo->prev = NULL;
 	return (philo);
@@ -62,6 +62,7 @@ t_table	*init_table(size_t philo_count)
 	table = (t_table *)ft_calloc(1, sizeof(t_table));
 	if (table == NULL)
 		return (ft_perror(1, "init_table", "Malloc Failure"), NULL);
+	i = 0;
 	while (i++ < philo_count)
 	{
 		philo = new_philo(i);

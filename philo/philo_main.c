@@ -24,7 +24,11 @@
 
 int	main(int argc, char **argv)
 {
-	read_args(argc, argv);
+	t_table	*table;
+
+	table = init_args_to_table(argc, argv);
+	if (table == NULL)
+		return (-1);
 	return (0);
 }
 

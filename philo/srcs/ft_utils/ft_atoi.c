@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_cutom_atoll.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnaimi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,11 +14,11 @@
 
 /* -------------------------------------------------------------------------- */
 
-int	ft_atoi(const char *str)
+int64_t	ft_custom_atoll(const char *str)
 {
+	size_t	i;
+	int64_t	sum;
 	char	sign;
-	int		sum;
-	int		i;
 
 	i = 0;
 	sum = 0;
@@ -28,7 +28,11 @@ int	ft_atoi(const char *str)
 	if (str[i] == '-' || str[i] == '+')
 		sign = str[i] - '+';
 	while (ft_isdigit(str[i]))
+	{
 		sum = (sum * 10) + (str[i++] - '0');
+		if (sum > LONG_MAX || (sign && -(sum) < LONG_MIN))
+			return (ft_perror(1, "ft_custom_atoll", "Number out of range"), 0);
+	}
 	if (sign)
 		sum *= -1;
 	return (sum);
