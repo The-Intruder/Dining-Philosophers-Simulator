@@ -57,10 +57,11 @@ static	char	**alloc_str(const char *s, size_t wrds, size_t len, char **ptr)
 		ptr[i++] = ft_strdup(&s[j]);
 		if (ptr == NULL)
 			return (free_mem(ptr, wrds), (char **)ft_calloc(1, sizeof(char *)));
-		while (j < len)
-			if (s[j + 1] && !s[j++])
+		while (j++ < len)
+			if (s[j] && !s[j - 1])
 				break ;
 	}
+	return (ptr);
 	return (ptr);
 }
 

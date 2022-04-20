@@ -45,18 +45,21 @@ char	**join_split_args(int argc, char **argv)
 
 /* -------------------------------------------------------------------------- */
 
-// int	valid_arg(char *arg)
-// {
-// 	size_t	i;
-// 	size_t	len;
+int	valid_arg(char *arg)
+{
+	size_t	i;
 
-// 	i = 0;
-// 	len = ft_strlen(arg);
-// 	while (i < len)
-// 	{
-
-// 	}
-// }
+	i = 0;
+	while (arg[i])
+	{
+		if ((i == 0 && arg[i] != '+' && !ft_isdigit(arg[i])) || \
+			(i != 0 && !ft_isdigit(arg[i])))
+			return (ft_perror(1, "valid_arg", "Invalid Argument"), 0);
+		printf("Hello\n");
+		++i;
+	}
+	return (1);
+}
 
 /* -------------------------------------------------------------------------- */
 
@@ -69,8 +72,8 @@ t_table	*read_args(int argc, char **argv)
 		return (ft_perror(1, "read_args", "Not enough arguments"), NULL);
 	n_argv = join_split_args(argc, argv);
 	i = 0;
-	while (n_argv[i])
-		printf("%s ", n_argv[i++]);
+	while (n_argv[i] && valid_arg(n_argv[i]))
+		++i;
 	return (NULL);
 }
 

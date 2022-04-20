@@ -16,7 +16,7 @@
 /* ---------------------------------- Libraries ----------------------------- */
 # include <unistd.h>
 # include <stdlib.h>
-#	include <stdio.h>
+# include <stdio.h>
 # include <pthread.h>
 # include <stdint.h>
 # include <stdbool.h>
@@ -52,13 +52,14 @@ typedef struct s_philo {
 }	t_philo;
 
 typedef struct s_table {
+	t_philo	*head;
+	t_philo	*tail;
+	size_t	size;
 	t_uint	time_to_eat;
 	t_uint	time_to_thk;
 	t_uint	time_to_slp;
 	t_uint	time_to_die;
-	t_philo	*head;
-	t_philo	*tail;
-	size_t	size;
+	size_t	count_to_eat;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */

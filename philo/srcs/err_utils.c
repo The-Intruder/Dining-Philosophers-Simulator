@@ -25,14 +25,14 @@
 void	ft_perror(int type, char *location, char *cause)
 {
 	if (type == 1)
-		write(2, RED"Error"NNN, 14);
+		write(2, RED"\nError"NNN, 15);
 	else if (type == 2)
 		write(2, YEL"Warning"NNN, 14);
 	write(2, "\tLocation:  ", 12);
 	write(2, location, ft_strlen(location));
-	write(2, "\n     \tCause:  ", 15);
+	write(2, "\n     \tCause:     ", 18);
 	write(2, cause, ft_strlen(cause));
-	write(2, "\n", 1);
+	write(2, "\n\n", 2);
 }
 
 /* -------------------------------------------------------------------------- */
