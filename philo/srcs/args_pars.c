@@ -16,21 +16,7 @@
 
 /* -------------------------------------------------------------------------- */
 
-void	init_table_vars(t_table *table, int64_t value, size_t var_numb)
-{
-	if (var_numb == 2)
-		table->time_to_die = value;
-	else if (var_numb == 3)
-		table->time_to_eat = value;
-	else if (var_numb == 4)
-		table->time_to_slp = value;
-	else if (var_numb == 5)
-		table->count_to_eat = value;
-}
-
-/* -------------------------------------------------------------------------- */
-
-static char	**join_split_args(int argc, char **argv)
+static char	**refactor_args(int argc, char **argv)
 {
 	size_t	i;
 	void	*ptr;
@@ -50,6 +36,7 @@ static char	**join_split_args(int argc, char **argv)
 			return (ft_free((void **)&jnd_args), NULL);
 	}
 	spltd_args = ft_split(jnd_args, ' ');
+	ft_free((void **)&jnd_args);
 	if (spltd_args == NULL || *spltd_args == NULL)
 		ft_free((void **)&spltd_args);
 	return (spltd_args);
@@ -65,8 +52,8 @@ static int	valid_arg(char *arg)
 	while (arg[i])
 	{
 		if ((i == 0 && arg[i] != '+' && !ft_isdigit(arg[i])) || \
-			(i != 0 && !ft_isdigit(arg[i++])))
-			return (ft_perror(1, "valid_arg", "Invalid Argument"), 0);
+			(i != 0 && !ft_isdigit(arg[i])))
+			return (0);
 		++i;
 	}
 	return (1);
@@ -74,32 +61,52 @@ static int	valid_arg(char *arg)
 
 /* -------------------------------------------------------------------------- */
 
-t_table	*init_args_to_table(int argc, char **argv)
+static int	init_vars(t_table *table, int64_t value, size_t var_numb)
+{
+	int	err;
+
+	err = 0;
+	if (var_numb == 1)
+		err = init_table(table, (size_t)value);
+	else if (var_numb == 2)
+		table->time_to_die = value;
+	else if (var_numb == 3)
+		table->time_to_eat = value;
+	else if (var_numb == 4)
+		table->time_to_slp = value;
+	else if (var_numb == 5)
+		table->count_to_eat = value;
+	return (err);
+}
+
+/* -------------------------------------------------------------------------- */
+
+int	init_args(t_table *table, int argc, char **argv)
 {
 	char	**new_argv;
-	t_table	*table;
-	int64_t	value;
+	int32_t	value;
+	int		err;
 	size_t	i;
 
 	if (argc <= 1)
-		return (ft_perror(1, "init_arg...", "Not enough arguments"), NULL);
-	new_argv = join_split_args(argc, argv);
+		return (ft_perror(1, "Not enough arguments"), -1);
+	new_argv = refactor_args(argc, argv);
+	if (new_argv == NULL)
+		return (-1);
 	i = 0;
-	table = NULL;
-	while (new_argv[i] && valid_arg(new_argv[i]))
+	while (new_argv[i] != NULL)
 	{
-		if (i >= 5)
-			return (ft_perror(1, "init_arg...", "Too many Arguments"), NULL);
-		value = ft_custom_atoll(new_argv[i++]);
+		if (!valid_arg(new_argv[i]) || i > 4)
+			return (ft_perror(1, "Something wrong with the Args"), -1);
+		value = (int32_t)ft_custom_atoll(new_argv[i++]);
 		if (value <= 0)
-			return (ft_perror(1, "init_args_to_table", "Invalid Argument"), \
-				free_table(table), free_2d_arr(new_argv), NULL);
-		else if (i == 1)
-			table = init_table((size_t)value);
-		else
-			init_table_vars(table, value, i);
+			return (ft_perror(1, "Argument out of range"), -1);
+		err = init_vars(table, value, i);
+		if (err != 0)
+			return (-1);
 	}
-	return (NULL);
+	free_2d_arr(new_argv);
+	return (0);
 }
 
 /* -------------------------------------------------------------------------- */

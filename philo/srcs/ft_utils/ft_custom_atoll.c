@@ -16,9 +16,9 @@
 
 int64_t	ft_custom_atoll(const char *str)
 {
-	size_t	i;
-	int64_t	sum;
 	char	sign;
+	int64_t	sum;
+	size_t	i;
 
 	i = 0;
 	sum = 0;
@@ -30,8 +30,8 @@ int64_t	ft_custom_atoll(const char *str)
 	while (ft_isdigit(str[i]))
 	{
 		sum = (sum * 10) + (str[i++] - '0');
-		if (sum > LONG_MAX || (sign && -(sum) < LONG_MIN))
-			return (ft_perror(1, "ft_custom_atoll", "Number out of range"), 0);
+		if (sum > INT_MAX || (sign && -(sum) < INT_MIN))
+			return (0);
 	}
 	if (sign)
 		sum *= -1;

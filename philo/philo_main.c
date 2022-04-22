@@ -24,10 +24,12 @@
 
 int	main(int argc, char **argv)
 {
-	t_table	*table;
+	t_table	table;
+	int		err;
 
-	table = init_args_to_table(argc, argv);
-	if (table == NULL)
+	ft_bzero(&table, sizeof(t_table));
+	err = init_args(&table, argc, argv);
+	if (err != 0)
 		return (-1);
 	return (0);
 }

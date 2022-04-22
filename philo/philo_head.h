@@ -46,18 +46,16 @@ typedef unsigned int	t_uint;
 typedef unsigned char	t_uchar;
 
 typedef struct s_philo {
-	struct s_philo	*prev;
-	size_t			indx;
-	pthread_t		phil;
-	pthread_mutex_t	fork;
-	int8_t			stat;
-	struct s_philo	*next;
+	void			*table;
+	pthread_mutex_t	fork_a;
+	pthread_mutex_t	*fork_b;
+	pthread_t		philo_th;
+	int8_t			state;
 }	t_philo;
 
 typedef struct s_table {
-	t_philo	*head;
-	t_philo	*tail;
-	size_t	size;
+	t_philo	*philos;
+	size_t	philo_count;
 	int64_t	time_to_eat;
 	int64_t	time_to_slp;
 	int64_t	time_to_die;
@@ -66,6 +64,7 @@ typedef struct s_table {
 
 /* --------------------------------- Prototypes ----------------------------- */
 // ft_utils //
+int64_t	ft_custom_atoll(const char *str);
 size_t	ft_strlen(const char *s);
 void	ft_free(void **ptr);
 void	ft_bzero(void *s, size_t n);
@@ -76,7 +75,6 @@ void	free_2d_arr(char **ptr_arr);
 char	*ft_strjoin(char const *s1, char const *s2, char sep);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strcpy(char *dest, const char *src);
-int64_t	ft_custom_atoll(const char *str);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 int		ft_isascii(int c);
@@ -87,14 +85,12 @@ int		ft_tolower(int c);
 int		ft_toupper(int c);
 
 // args_pars //
-t_table	*init_args_to_table(int argc, char **argv);
+int		init_args(t_table *table, int argc, char **argv);
 
 // table_utils //
-t_table	*init_table(size_t philo_count);
-void	iter_table(t_table *table, void (*function)(t_philo *));
-void	free_table(t_table *table);
+int		init_table(t_table *table, size_t philo_count);
 
 // err_utils //
-void	ft_perror(int type, char *location, char *cause);
+void	ft_perror(int type, char *cause);
 
 #endif
