@@ -41,25 +41,31 @@
 # define THK	0b0100
 # define DDD	0b1000
 
+// Other things //
+# define PLS	0b0001
+# define DGT	0b0010
+
 /* ---------------------------------- TypeDefs ------------------------------ */
 typedef unsigned int	t_uint;
 typedef unsigned char	t_uchar;
 
+//typedef struct s_table	t_table;
+
 typedef struct s_philo {
 	void			*table;
+	pthread_t		ph_thrd;
 	pthread_mutex_t	fork_a;
-	pthread_mutex_t	*fork_b;
-	pthread_t		philo_th;
 	int8_t			state;
+	size_t			id;
 }	t_philo;
 
 typedef struct s_table {
-	t_philo	*philos;
-	size_t	philo_count;
-	int64_t	time_to_eat;
-	int64_t	time_to_slp;
-	int64_t	time_to_die;
-	int64_t	count_to_eat;
+	t_philo		*philos;
+	size_t		philo_count;
+	useconds_t	time_to_eat;
+	useconds_t	time_to_slp;
+	useconds_t	time_to_die;
+	int64_t		count_to_eat;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */
@@ -92,5 +98,12 @@ int		init_table(t_table *table, size_t philo_count);
 
 // err_utils //
 void	ft_perror(int type, char *cause);
+
+// philo_actvts //
+int		philo_sleep(t_philo *philo, useconds_t time_to_sleep);
+int		philo_think(t_philo *philo, useconds_t time_to_think);
+int		philo_eat(t_philo *philo, useconds_t time_to_eat);
+int		philo_take_fork(pthread_mutex_t *fork);
+int		philo_put_fork(pthread_mutex_t *fork);
 
 #endif

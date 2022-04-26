@@ -14,7 +14,7 @@
 
 /* -------------------------------------------------------------------------- */
 
-int	philo_eat(t_philo *philo, t_uint time_to_eat)
+int	philo_eat(t_philo *philo, useconds_t time_to_eat)
 {
 	int	err;
 
@@ -28,7 +28,7 @@ int	philo_eat(t_philo *philo, t_uint time_to_eat)
 
 /* -------------------------------------------------------------------------- */
 
-int	philo_sleep(t_philo *philo, t_uint time_to_sleep)
+int	philo_sleep(t_philo *philo, useconds_t time_to_sleep)
 {
 	int	err;
 
@@ -42,7 +42,7 @@ int	philo_sleep(t_philo *philo, t_uint time_to_sleep)
 
 /* -------------------------------------------------------------------------- */
 
-int	philo_think(t_philo *philo, t_uint time_to_think)
+int	philo_think(t_philo *philo, useconds_t time_to_think)
 {
 	int	err;
 

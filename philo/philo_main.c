@@ -25,12 +25,18 @@
 int	main(int argc, char **argv)
 {
 	t_table	table;
+	size_t	i;
 	int		err;
 
 	ft_bzero(&table, sizeof(t_table));
 	err = init_args(&table, argc, argv);
 	if (err != 0)
 		return (-1);
+		i = 0;
+	while (i < table.philo_count)
+		pthread_detach(table.philos[i++].ph_thrd);
+	while (1)
+		;
 	return (0);
 }
 
