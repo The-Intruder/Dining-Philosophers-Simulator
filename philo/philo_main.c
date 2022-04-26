@@ -32,9 +32,7 @@ int	main(int argc, char **argv)
 	err = init_args(&table, argc, argv);
 	if (err != 0)
 		return (-1);
-		i = 0;
-	while (i < table.philo_count)
-		pthread_detach(table.philos[i++].ph_thrd);
+	i = 0;
 	while (1)
 		;
 	return (0);

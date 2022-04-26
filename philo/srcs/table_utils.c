@@ -26,11 +26,10 @@ static void	*routine(void *ptr)
 	philo = (t_philo *)ptr;
 	table = (t_table *)philo->table;
 	philo_take_fork(&philo->fork_a);
-	philo_take_fork(philo->fork_b);
 	philo_eat(philo, table->time_to_eat);
 	printf("Philo %zu is eating ...\n", philo->id);
 	philo_put_fork(&philo->fork_a);
-	philo_put_fork(philo->fork_b);
+	ptr = NULL;
 	return (NULL);
 }
 
@@ -46,12 +45,13 @@ static int	init_philo(t_table *table, size_t i)
 	philo_a->id = i + 1;
 	philo_a->state = 0;
 	pthread_err = pthread_create(&philo_a->ph_thrd, NULL, &routine, \
-		(void *)table);
+		(void *)philo_a);
 	if (pthread_err != 0)
 		return (-1);
 	pthread_err = pthread_mutex_init(&philo_a->fork_a, NULL);
 	if (pthread_err != 0)
 		return (-1);
+	pthread_err = pthread_detach(philo_a->ph_thrd);
 	return (0);
 }
 
@@ -74,9 +74,6 @@ int	init_table(t_table *table, size_t philo_count)
 		if (err != 0)
 			return (-1);
 	}
-	i = 0;
-	while (pthread_join(table->philos[i].ph_thrd, NULL))
-		i++;
 	return (0);
 }
 
