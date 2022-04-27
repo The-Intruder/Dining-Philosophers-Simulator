@@ -93,13 +93,13 @@ static int	init_vars(t_table *table, int64_t value, size_t var_numb)
 	if (var_numb == 1)
 		err = init_table(table, (size_t)value);
 	else if (var_numb == 2)
-		table->time_to_die = (useconds_t)value;
+		table->time_to_die = (useconds_t)value * 1000;
 	else if (var_numb == 3)
-		table->time_to_eat = (useconds_t)value;
+		table->time_to_eat = (useconds_t)value * 1000;
 	else if (var_numb == 4)
-		table->time_to_slp = (useconds_t)value;
+		table->time_to_slp = (useconds_t)value * 1000;
 	else if (var_numb == 5)
-		table->count_to_eat = value;
+		table->count_to_eat = value * table->philo_count;
 	return (err);
 }
 

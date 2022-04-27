@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
+# include <sys/time.h>
 
 // Macros & Typedefs //
 # include <stdint.h>
@@ -51,8 +52,10 @@
 # define DGT	0b10
 
 /* ---------------------------------- TypeDefs ------------------------------ */
-typedef unsigned int	t_uint;
-typedef unsigned char	t_uchar;
+typedef unsigned int		t_uint;
+typedef unsigned long		t_ulong;
+typedef unsigned char		t_uchar;
+typedef struct timeval		t_timeval;
 
 //typedef struct s_table	t_table;
 
@@ -72,6 +75,7 @@ typedef struct s_table {
 	useconds_t		time_to_die;
 	int64_t			count_to_eat;
 	size_t			philo_count;
+	t_ulong			start_time;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */
@@ -102,12 +106,14 @@ int		init_args(t_table *table, int argc, char **argv);
 // table_utils //
 int		init_table(t_table *table, size_t philo_count);
 
-// err_utils //
+// philo_utils //
+t_ulong	ft_get_time_in_usec(void);
 void	ft_perror(int type, char *cause);
+void	ft_usleep(useconds_t usec_to_sleep);
 
 // philo_actvts //
-void	print_safely(size_t id, char *state, pthread_mutex_t *mutex);
-void	forks_action(t_philo *philo_a, int8_t state);
+void	print_safely(t_table *table, size_t id, char *state);
+void	forks_action(t_philo *philo_a, t_philo *philo_b, int8_t state);
 void	philo_sleep(t_philo *philo, useconds_t time_to_sleep);
 void	philo_think(t_philo *philo, useconds_t time_to_think);
 void	philo_eat(t_philo *philo, useconds_t time_to_eat);

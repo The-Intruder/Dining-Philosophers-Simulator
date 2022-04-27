@@ -29,6 +29,7 @@ int	main(int argc, char **argv)
 	int		err;
 
 	ft_bzero(&table, sizeof(t_table));
+	table.start_time = ft_get_time_in_usec();
 	err = init_args(&table, argc, argv);
 	if (err != 0)
 		return (-1);
