@@ -121,7 +121,7 @@ int	init_args(t_table *table, int argc, char **argv)
 		if (!valid_arg(new_argv[i]))
 			return (ft_perror(1, "Something wrong with the Args"), -1);
 		value = (int32_t)ft_custom_atoll(new_argv[i++]);
-		if (value <= 0)
+		if ((i == 5 && value < 0) || (i != 5 && value <= 0))
 			return (ft_perror(1, "Argument out of range"), -1);
 		err = init_vars(table, value, i);
 		if (err != 0)

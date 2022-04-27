@@ -33,7 +33,7 @@ int	main(int argc, char **argv)
 	if (err != 0)
 		return (-1);
 	i = 0;
-	while (1)
+	while (table.count_to_eat)
 		;
 	return (0);
 }

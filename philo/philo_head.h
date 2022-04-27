@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
+
 // Macros & Typedefs //
 # include <stdint.h>
 # include <stdbool.h>
@@ -35,15 +36,19 @@
 # define CYN	"\033[36m"
 # define GRA	"\033[37m"
 
-// Other things //
+// Philos Activities Flags //
 # define EAT	0b0001
 # define SLP	0b0010
 # define THK	0b0100
 # define DDD	0b1000
 
+// Fork Activities //
+# define TAK	0b01
+# define PUT	0b10
+
 // Other things //
-# define PLS	0b0001
-# define DGT	0b0010
+# define PLS	0b01
+# define DGT	0b10
 
 /* ---------------------------------- TypeDefs ------------------------------ */
 typedef unsigned int	t_uint;
@@ -52,20 +57,21 @@ typedef unsigned char	t_uchar;
 //typedef struct s_table	t_table;
 
 typedef struct s_philo {
-	void			*table;
+	struct s_table	*table;
 	pthread_t		ph_thrd;
-	pthread_mutex_t	fork_a;
+	pthread_mutex_t	fork;
 	int8_t			state;
 	size_t			id;
 }	t_philo;
 
 typedef struct s_table {
-	t_philo		*philos;
-	size_t		philo_count;
-	useconds_t	time_to_eat;
-	useconds_t	time_to_slp;
-	useconds_t	time_to_die;
-	int64_t		count_to_eat;
+	t_philo			*philos;
+	pthread_mutex_t	msg_mtx;
+	useconds_t		time_to_eat;
+	useconds_t		time_to_slp;
+	useconds_t		time_to_die;
+	int64_t			count_to_eat;
+	size_t			philo_count;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */
@@ -100,10 +106,10 @@ int		init_table(t_table *table, size_t philo_count);
 void	ft_perror(int type, char *cause);
 
 // philo_actvts //
-int		philo_sleep(t_philo *philo, useconds_t time_to_sleep);
-int		philo_think(t_philo *philo, useconds_t time_to_think);
-int		philo_eat(t_philo *philo, useconds_t time_to_eat);
-int		philo_take_fork(pthread_mutex_t *fork);
-int		philo_put_fork(pthread_mutex_t *fork);
+void	print_safely(size_t id, char *state, pthread_mutex_t *mutex);
+void	forks_action(t_philo *philo_a, int8_t state);
+void	philo_sleep(t_philo *philo, useconds_t time_to_sleep);
+void	philo_think(t_philo *philo, useconds_t time_to_think);
+void	philo_eat(t_philo *philo, useconds_t time_to_eat);
 
 #endif

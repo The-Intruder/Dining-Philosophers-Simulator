@@ -14,68 +14,64 @@
 
 /* -------------------------------------------------------------------------- */
 
-int	philo_eat(t_philo *philo, useconds_t time_to_eat)
+void	print_safely(size_t id, char *state, pthread_mutex_t *mutex)
 {
-	int	err;
+	pthread_mutex_lock(mutex);
+	printf("%zu %s\n", id, state);
+	pthread_mutex_unlock(mutex);
+}
 
+/* -------------------------------------------------------------------------- */
+
+void	forks_action(t_philo *philo_a, int8_t state)
+{
+	t_philo	*philo_b;
+	size_t	i;
+
+	i = philo_a->id;
+	philo_b = &philo_a->table->philos[i];
+	if (state == TAK)
+	{
+		pthread_mutex_lock(&philo_a->fork);
+		print_safely(i, "has taken a fork", &philo_a->table->msg_mtx);
+		pthread_mutex_lock(&philo_b->fork);
+		print_safely(i, "has taken a fork", &philo_a->table->msg_mtx);
+	}
+	else if (state == PUT)
+	{
+		pthread_mutex_unlock(&philo_a->fork);
+		pthread_mutex_unlock(&philo_b->fork);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+void	philo_eat(t_philo *philo, useconds_t time_to_eat)
+{
 	philo->state &= EAT;
-	err = usleep(time_to_eat);
+	print_safely(philo->id, "is eating", &philo->table->msg_mtx);
+	usleep(time_to_eat);
 	philo->state = 0;
-	if (err != 0)
-		return (ft_perror(1, "usleep failure"), -1);
-	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int	philo_sleep(t_philo *philo, useconds_t time_to_sleep)
+void	philo_sleep(t_philo *philo, useconds_t time_to_sleep)
 {
-	int	err;
-
 	philo->state &= SLP;
-	err = usleep(time_to_sleep);
+	print_safely(philo->id, "is sleeping", &philo->table->msg_mtx);
+	usleep(time_to_sleep);
 	philo->state = 0;
-	if (err != 0)
-		return (ft_perror(1, "usleep failure"), -1);
-	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int	philo_think(t_philo *philo, useconds_t time_to_think)
+void	philo_think(t_philo *philo, useconds_t time_to_think)
 {
-	int	err;
-
 	philo->state &= THK;
-	err = usleep(time_to_think);
+	print_safely(philo->id, "is thinking", &philo->table->msg_mtx);
+	usleep(time_to_think);
 	philo->state = 0;
-	if (err != 0)
-		return (ft_perror(1, "usleep failure"), -1);
-	return (0);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int	philo_take_fork(pthread_mutex_t *fork)
-{
-	int	err;
-
-	err = pthread_mutex_lock(fork);
-	if (err != 0)
-		return (ft_perror(1, "Unsuccessful Mutex Locking"), -1);
-	return (0);
-}
-
-/* -------------------------------------------------------------------------- */
-
-int	philo_put_fork(pthread_mutex_t *fork)
-{
-	int	err;
-
-	err = pthread_mutex_unlock(fork);
-	if (err != 0)
-		return (ft_perror(1, "Unsuccessful Mutex Unlocking"), -1);
-	return (0);
 }
 
 /* -------------------------------------------------------------------------- */

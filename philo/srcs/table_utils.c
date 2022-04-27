@@ -20,16 +20,21 @@
 
 static void	*routine(void *ptr)
 {
-	t_philo	*philo;
-	t_table	*table;
+	t_philo	*philo_a;
+	t_philo	*philo_b;
+	size_t	i;
 
-	philo = (t_philo *)ptr;
-	table = (t_table *)philo->table;
-	philo_take_fork(&philo->fork_a);
-	philo_eat(philo, table->time_to_eat);
-	printf("Philo %zu is eating ...\n", philo->id);
-	philo_put_fork(&philo->fork_a);
-	ptr = NULL;
+	philo_a = (t_philo *)ptr;
+	i = philo_a->id;
+	philo_b = &philo_a->table->philos[i];
+	while (philo_a->state != DDD && philo_a->table->count_to_eat)
+	{
+		forks_action(philo_a, TAK);
+		philo_eat(philo_a, philo_a->table->time_to_eat);
+		forks_action(philo_a, PUT);
+		print_safely(i, "is thinking", &philo_a->table->msg_mtx);
+		philo_sleep(philo_a, philo_a->table->time_to_slp);
+	}
 	return (NULL);
 }
 
@@ -48,7 +53,7 @@ static int	init_philo(t_table *table, size_t i)
 		(void *)philo_a);
 	if (pthread_err != 0)
 		return (-1);
-	pthread_err = pthread_mutex_init(&philo_a->fork_a, NULL);
+	pthread_err = pthread_mutex_init(&philo_a->fork, NULL);
 	if (pthread_err != 0)
 		return (-1);
 	pthread_err = pthread_detach(philo_a->ph_thrd);
@@ -68,6 +73,9 @@ int	init_table(t_table *table, size_t philo_count)
 	table->philos = (t_philo *)ft_calloc(philo_count, sizeof(t_philo));
 	if (table->philos == NULL)
 		return (ft_perror(2, "Malloc Failure"), -1);
+	err = pthread_mutex_init(&table->msg_mtx, NULL);
+	if (err != 0)
+		return (-1);
 	while (i < philo_count)
 	{
 		err = init_philo(table, i++);
