@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_utils.c                                      :+:      :+:    :+:   */
+/*   philo_utilities.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnaimi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,29 +14,29 @@
 
 /* -------------------------------------------------------------------------- */
 
-t_ulong	ft_get_time_in_usec(void)
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+t_ulong	ft_get_time(void)
 {
 	t_timeval	time;
-	t_ulong		usec_time;
+	t_ulong		time_in_usec;
 
 	gettimeofday(&time, NULL);
-	usec_time = (time.tv_sec * 1000000) + time.tv_usec;
-	return (usec_time);
+	time_in_usec = (time.tv_sec * 1000000) + time.tv_usec;
+	return ((t_ulong)time_in_usec);
 }
 
 /* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
-void	ft_usleep(useconds_t usec_to_sleep)
+void	ft_usleep(useconds_t time_to_sleep)
 {
-	t_ulong	time_in_usec;
+	t_ulong	time;
 
-	time_in_usec = ft_get_time_in_usec();
-	while (ft_get_time_in_usec() - time_in_usec > usec_to_sleep)
-		usleep(usec_to_sleep / 10);
+	time = ft_get_time();
+	while (ft_get_time() - time < time_to_sleep)
+		;
 }
 
 /* -------------------------------------------------------------------------- */

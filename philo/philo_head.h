@@ -57,65 +57,53 @@ typedef unsigned long		t_ulong;
 typedef unsigned char		t_uchar;
 typedef struct timeval		t_timeval;
 
-//typedef struct s_table	t_table;
-
 typedef struct s_philo {
 	struct s_table	*table;
-	pthread_t		ph_thrd;
 	pthread_mutex_t	fork;
+	pthread_t		ph_thrd;
 	int8_t			state;
-	size_t			id;
+	int				id;
 }	t_philo;
 
 typedef struct s_table {
 	t_philo			*philos;
+	t_ulong			start_time;
 	pthread_mutex_t	msg_mtx;
 	useconds_t		time_to_eat;
 	useconds_t		time_to_slp;
 	useconds_t		time_to_die;
-	int64_t			count_to_eat;
-	size_t			philo_count;
-	t_ulong			start_time;
+	int				count_to_eat;
+	int				philo_count;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */
-// ft_utils //
-int64_t	ft_custom_atoll(const char *str);
+// ft_utils
 size_t	ft_strlen(const char *s);
-void	ft_free(void **ptr);
-void	ft_bzero(void *s, size_t n);
-void	*ft_calloc(size_t count, size_t size);
-char	*ft_strdup(const char *src);
-char	**ft_split(char const *s, char c);
 void	free_2d_arr(char **ptr_arr);
+void	ft_bzero(void *s, size_t n);
+void	ft_free(void **ptr);
+void	*ft_calloc(size_t count, size_t size);
 char	*ft_strjoin(char const *s1, char const *s2, char sep);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strcpy(char *dest, const char *src);
-int		ft_isalnum(int c);
-int		ft_isalpha(int c);
-int		ft_isascii(int c);
+char	*ft_strdup(const char *src);
+char	**ft_split(char const *s, char c);
+int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
-int		ft_isprint(int c);
 int		ft_isspace(int c);
-int		ft_tolower(int c);
-int		ft_toupper(int c);
 
-// args_pars //
+// args_pars
 int		init_args(t_table *table, int argc, char **argv);
 
-// table_utils //
-int		init_table(t_table *table, size_t philo_count);
+// table_utils
+int		init_table(t_table *table, int philo_count);
 
-// philo_utils //
-t_ulong	ft_get_time_in_usec(void);
+// philo_utilities
+t_ulong	ft_get_time(void);
 void	ft_perror(int type, char *cause);
 void	ft_usleep(useconds_t usec_to_sleep);
 
-// philo_actvts //
-void	print_safely(t_table *table, size_t id, char *state);
-void	forks_action(t_philo *philo_a, t_philo *philo_b, int8_t state);
-void	philo_sleep(t_philo *philo, useconds_t time_to_sleep);
-void	philo_think(t_philo *philo, useconds_t time_to_think);
-void	philo_eat(t_philo *philo, useconds_t time_to_eat);
+// philo_actvts
+void	print_safely(t_philo *philo, char *action);
 
 #endif

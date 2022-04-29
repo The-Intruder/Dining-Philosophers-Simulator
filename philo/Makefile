@@ -54,13 +54,11 @@ ARCHIVE		:= libphilo.a
 UTLS_DIR := ft_utils/
 
 SRCS_DIR := srcs/
-SRCS_LST := args_pars.c philo_utils.c philo_actvts.c table_utils.c \
-	ft_utils/ft_calloc.c ft_utils/ft_strcpy.c ft_utils/ft_strdup.c \
-	ft_utils/ft_free.c ft_utils/ft_isalnum.c ft_utils/ft_isalpha.c \
-	ft_utils/ft_isspace.c ft_utils/ft_split.c ft_utils/ft_tolower.c \
+SRCS_LST := ft_utils/ft_calloc.c ft_utils/ft_strcpy.c ft_utils/ft_isdigit.c \
+	ft_utils/ft_atoi.c ft_utils/ft_bzero.c ft_utils/ft_strdup.c \
+	ft_utils/ft_free.c ft_utils/ft_isspace.c ft_utils/ft_split.c  \
 	ft_utils/ft_strjoin.c ft_utils/ft_strlen.c ft_utils/ft_strtrim.c \
-	ft_utils/ft_isascii.c ft_utils/ft_isdigit.c ft_utils/ft_isprint.c \
-	ft_utils/ft_toupper.c ft_utils/ft_custom_atoll.c ft_utils/ft_bzero.c
+	args_parsing.c philo_utilities.c philos_activities.c table_utilities.c
 SRCS := ${addprefix ${SRCS_DIR}, ${SRCS_LST}}
 
 OBJS_DIR := objs/
@@ -92,14 +90,15 @@ clean:
 
 fclean: clean
 	@rm -f ${ARCHIVE}
-	@echo "${GRA}${ARCHIVE}${RED}\tarchive file ${GRA}${NAME}${RED}\thas been deleted${NNN}"
+	@echo "${GRA}${ARCHIVE}${RED}\tarchive file ${GRA}${NAME}${RED}\thas \
+		been deleted${NNN}"
 	@rm -f ${NAME}
 	@echo "${GRA}${NAME}${RED}\t\texecutable file has been deleted${NNN}"
 
 re: fclean all
 
 clear:
-	@echo -e "\033[2J\033[3J\033[1:1H"
+	@clear
 
 title:
 	@clear
