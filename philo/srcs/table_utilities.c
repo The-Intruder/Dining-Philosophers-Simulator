@@ -22,14 +22,24 @@ static void	*routine(void *ptr)
 {
 	while (((t_philo *)ptr)->table->count_to_eat)
 	{
-		pthread_mutex_lock(&((t_philo *)ptr)->fork);
-		pthread_mutex_lock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
+		if (((t_philo *)ptr)->id % 2 == 0)
+		{
+			pthread_mutex_lock(&((t_philo *)ptr)->fork);
+			pthread_mutex_lock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
+		}
+		else
+		{
+			pthread_mutex_lock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
+			pthread_mutex_lock(&((t_philo *)ptr)->fork);
+		}
 		print_safely(((t_philo *)ptr), "has taken a fork");
 		print_safely(((t_philo *)ptr), "has taken a fork");
 		print_safely(((t_philo *)ptr), "is eating");
+		print_safely(((t_philo *)ptr), "has put a fork");
+		print_safely(((t_philo *)ptr), "has put a fork");
 		ft_usleep(((t_philo *)ptr)->table->time_to_eat);
-		pthread_mutex_unlock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
 		pthread_mutex_unlock(&((t_philo *)ptr)->fork);
+		pthread_mutex_unlock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
 		print_safely((t_philo *)ptr, "is thinking");
 		print_safely((t_philo *)ptr, "is sleeping");
 		ft_usleep(((t_philo *)ptr)->table->time_to_slp);
