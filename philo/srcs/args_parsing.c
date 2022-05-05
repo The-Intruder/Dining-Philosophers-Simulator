@@ -94,7 +94,7 @@ static int	init_vars(t_table *table, int value, int var_numb)
 	else if (var_numb == 3)
 		table->time_to_slp = (useconds_t)value * 1000;
 	else if (var_numb == 4)
-		table->count_to_eat = value * table->philo_count;
+		table->count_to_eat = value;
 	return (0);
 }
 

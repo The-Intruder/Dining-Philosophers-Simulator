@@ -16,11 +16,9 @@
 
 void	print_safely(t_philo *philo, char *action)
 {
-	t_ulong	usec;
-
 	pthread_mutex_lock(&philo->table->msg_mtx);
-	usec = ft_get_time() - philo->table->start_time;
-	printf("%lu %d %s\n", usec / 1000, (philo->id) + 1, action);
+	printf("%lu %d %s\n", (ft_get_time() - philo->table->start_time) / 1000, \
+		(philo->id) + 1, action);
 	pthread_mutex_unlock(&philo->table->msg_mtx);
 }
 

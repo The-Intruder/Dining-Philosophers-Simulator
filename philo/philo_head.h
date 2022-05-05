@@ -63,6 +63,7 @@ typedef struct s_philo {
 	pthread_t		ph_thrd;
 	int8_t			state;
 	int				id;
+	int				nmb_eat;
 }	t_philo;
 
 typedef struct s_table {

@@ -20,32 +20,37 @@
 
 static void	*routine(void *ptr)
 {
-	while (((t_philo *)ptr)->table->count_to_eat)
+	t_philo	*philo;
+
+	philo = (t_philo *)ptr;
+	if (philo->id % 2)
+		usleep(100);
+	while (philo->table->count_to_eat)
 	{
-		if (((t_philo *)ptr)->id % 2 == 0)
-		{
-			pthread_mutex_lock(&((t_philo *)ptr)->fork);
-			pthread_mutex_lock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
-		}
-		else
-		{
-			pthread_mutex_lock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
-			pthread_mutex_lock(&((t_philo *)ptr)->fork);
-		}
-		print_safely(((t_philo *)ptr), "has taken a fork");
-		print_safely(((t_philo *)ptr), "has taken a fork");
-		print_safely(((t_philo *)ptr), "is eating");
-		print_safely(((t_philo *)ptr), "has put a fork");
-		print_safely(((t_philo *)ptr), "has put a fork");
-		ft_usleep(((t_philo *)ptr)->table->time_to_eat);
-		pthread_mutex_unlock(&((t_philo *)ptr)->fork);
-		pthread_mutex_unlock(&((t_philo *)ptr)->table->philos[((t_philo *)ptr)->id + 1 % ((t_philo *)ptr)->table->philo_count].fork);
-		print_safely((t_philo *)ptr, "is thinking");
-		print_safely((t_philo *)ptr, "is sleeping");
-		ft_usleep(((t_philo *)ptr)->table->time_to_slp);
+		pthread_mutex_lock(&philo->fork);
+		print_safely(philo, "has taken a R-fork");
+		pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
+			philo->table->philo_count].fork);
+		print_safely(philo, "has taken a L-fork");
+		print_safely(philo, "is eating");
+
+		ft_usleep(philo->table->time_to_eat);
+		philo->nmb_eat++;
+		print_safely(philo, "has put a L-fork");
+		pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
+			philo->table->philo_count].fork);
+		print_safely(philo, "has put a R-fork");
+		pthread_mutex_unlock(&philo->fork);
+		print_safely(philo, "is thinking");
+		print_safely(philo, "is sleeping");
+		ft_usleep(philo->table->time_to_slp);
+		if (philo->nmb_eat == philo->table->count_to_eat)
+			break ;
 	}
 	return (NULL);
 }
+
+// (philo->id + 1) % (philo->table->philo_count)
 
 /* -------------------------------------------------------------------------- */
 
@@ -59,6 +64,7 @@ static int	init_philos(t_table *table)
 		table->philos[i].table = table;
 		table->philos[i].id = i;
 		table->philos[i].state = 0;
+		table->philos[i].nmb_eat = 0;
 	}
 	i = -1;
 	while (++i < table->philo_count)

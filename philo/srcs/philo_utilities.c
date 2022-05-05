@@ -21,11 +21,9 @@
 t_ulong	ft_get_time(void)
 {
 	t_timeval	time;
-	t_ulong		time_in_usec;
 
 	gettimeofday(&time, NULL);
-	time_in_usec = (time.tv_sec * 1000000) + time.tv_usec;
-	return ((t_ulong)time_in_usec);
+	return ((t_ulong)((time.tv_sec * 1000000) + time.tv_usec));
 }
 
 /* -------------------------------------------------------------------------- */
