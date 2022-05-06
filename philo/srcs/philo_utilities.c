@@ -16,8 +16,6 @@
 
 /* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-
 t_ulong	ft_get_time(void)
 {
 	t_timeval	time;
@@ -35,6 +33,18 @@ void	ft_usleep(useconds_t time_to_sleep)
 	time = ft_get_time();
 	while (ft_get_time() - time < time_to_sleep)
 		;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void	print_safely(t_philo *philo, char *action)
+{
+	if (philo->table->allow_print == OFF)
+		return ;
+	pthread_mutex_lock(&philo->table->msg_mtx);
+	printf("%-10lu %d %s\n", (ft_get_time() - philo->table->start_time) \
+		/ 1000, philo->id + 1, action);
+	pthread_mutex_unlock(&philo->table->msg_mtx);
 }
 
 /* -------------------------------------------------------------------------- */

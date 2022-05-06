@@ -37,19 +37,10 @@
 # define CYN	"\033[36m"
 # define GRA	"\033[37m"
 
-// Philos Activities Flags //
-# define EAT	0b0001
-# define SLP	0b0010
-# define THK	0b0100
-# define DDD	0b1000
-
-// Fork Activities //
-# define TAK	0b01
-# define PUT	0b10
-
-// Other things //
-# define PLS	0b01
-# define DGT	0b10
+/* ----------------------------------- Enums -------------------------------- */
+enum philo_stat	{EAT = 1, SLP};
+enum args_flag	{PLS = 1, DGT = 2};
+enum table_stat	{OFF, ON};
 
 /* ---------------------------------- TypeDefs ------------------------------ */
 typedef unsigned int		t_uint;
@@ -58,23 +49,27 @@ typedef unsigned char		t_uchar;
 typedef struct timeval		t_timeval;
 
 typedef struct s_philo {
+	t_ulong			last_meal_time;
 	struct s_table	*table;
 	pthread_mutex_t	fork;
 	pthread_t		ph_thrd;
-	int8_t			state;
+	int				eat_count;
 	int				id;
-	int				nmb_eat;
+	int8_t			stat;
 }	t_philo;
 
 typedef struct s_table {
+	pthread_mutex_t	msg_mtx;
 	t_philo			*philos;
 	t_ulong			start_time;
-	pthread_mutex_t	msg_mtx;
-	useconds_t		time_to_eat;
-	useconds_t		time_to_slp;
-	useconds_t		time_to_die;
-	int				count_to_eat;
+	t_ulong			time_to_eat;
+	t_ulong			time_to_slp;
+	t_ulong			time_to_die;
+	int				status;
 	int				philo_count;
+	int				count_to_eat;
+	int				have_eaten;
+	int				allow_print;
 }	t_table;
 
 /* --------------------------------- Prototypes ----------------------------- */

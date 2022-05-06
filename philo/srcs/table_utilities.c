@@ -14,7 +14,43 @@
 
 /* -------------------------------------------------------------------------- */
 
+void	take_forks_conditionally(t_philo *philo)
+{
+	if (philo->id % 2)
+	{
+		pthread_mutex_lock(&philo->fork);
+		print_safely(philo, "has taken a fork");
+		pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
+			philo->table->philo_count].fork);
+		print_safely(philo, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
+			philo->table->philo_count].fork);
+		print_safely(philo, "has taken a fork");
+		pthread_mutex_lock(&philo->fork);
+		print_safely(philo, "has taken a fork");
+	}
+}
+
 /* -------------------------------------------------------------------------- */
+
+void	put_forks_conditionally(t_philo *philo)
+{
+	if (philo->id % 2)
+	{
+		pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
+			philo->table->philo_count].fork);
+		pthread_mutex_unlock(&philo->fork);
+	}
+	else
+	{
+		pthread_mutex_unlock(&philo->fork);
+		pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
+			philo->table->philo_count].fork);
+	}
+}
 
 /* -------------------------------------------------------------------------- */
 
@@ -23,34 +59,24 @@ static void	*routine(void *ptr)
 	t_philo	*philo;
 
 	philo = (t_philo *)ptr;
-	if (philo->id % 2)
-		usleep(100);
-	while (philo->table->count_to_eat)
+	while (philo->table->status)
 	{
-		pthread_mutex_lock(&philo->fork);
-		print_safely(philo, "has taken a R-fork");
-		pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
-			philo->table->philo_count].fork);
-		print_safely(philo, "has taken a L-fork");
+		take_forks_conditionally(philo);
 		print_safely(philo, "is eating");
-
+		philo->stat = EAT;
 		ft_usleep(philo->table->time_to_eat);
-		philo->nmb_eat++;
-		print_safely(philo, "has put a L-fork");
-		pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
-			philo->table->philo_count].fork);
-		print_safely(philo, "has put a R-fork");
-		pthread_mutex_unlock(&philo->fork);
+		philo->last_meal_time = ft_get_time();
+		philo->stat = 0;
+		put_forks_conditionally(philo);
+		philo->eat_count++;
 		print_safely(philo, "is thinking");
 		print_safely(philo, "is sleeping");
 		ft_usleep(philo->table->time_to_slp);
-		if (philo->nmb_eat == philo->table->count_to_eat)
-			break ;
+		if (philo->table->count_to_eat != -1 && philo->eat_count == philo->table->count_to_eat)
+			philo->table->have_eaten += 1;
 	}
 	return (NULL);
 }
-
-// (philo->id + 1) % (philo->table->philo_count)
 
 /* -------------------------------------------------------------------------- */
 
@@ -63,22 +89,21 @@ static int	init_philos(t_table *table)
 	{
 		table->philos[i].table = table;
 		table->philos[i].id = i;
-		table->philos[i].state = 0;
-		table->philos[i].nmb_eat = 0;
+		table->philos[i].eat_count = 0;
+		table->philos[i].stat = 0;
+		if (pthread_mutex_init(&table->philos[i].fork, NULL) != 0)
+			return (ft_perror(2, "Mutex Init Failure"), -1);
 	}
 	i = -1;
 	while (++i < table->philo_count)
-		if (pthread_mutex_init(&table->philos[i].fork, NULL) != 0)
-			return (ft_perror(2, "Mutex Init Failure"), -1);
-	i = -1;
-	while (++i < table->philo_count)
+	{
 		if (pthread_create(&table->philos[i].ph_thrd, NULL, &routine, \
 			(void *)&table->philos[i]) != 0)
 			return (ft_perror(2, "Thread Creation Error"), -1);
-	i = -1;
-	while (++i < table->philo_count)
+		table->philos[i].last_meal_time = ft_get_time();
 		if (pthread_detach(table->philos[i].ph_thrd) != 0)
 			return (ft_perror(2, "Thread Detaching Error"), -1);
+	}
 	return (0);
 }
 
@@ -86,6 +111,9 @@ static int	init_philos(t_table *table)
 
 int	init_table(t_table *table, int philo_count)
 {
+	table->status = ON;
+	table->allow_print = ON;
+	table->have_eaten = 0;
 	table->philo_count = philo_count;
 	table->philos = (t_philo *)ft_calloc(philo_count, sizeof(t_philo));
 	if (table->philos == NULL)

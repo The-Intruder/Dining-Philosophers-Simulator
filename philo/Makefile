@@ -58,7 +58,7 @@ SRCS_LST := ft_utils/ft_calloc.c ft_utils/ft_strcpy.c ft_utils/ft_isdigit.c \
 	ft_utils/ft_atoi.c ft_utils/ft_bzero.c ft_utils/ft_strdup.c \
 	ft_utils/ft_free.c ft_utils/ft_isspace.c ft_utils/ft_split.c  \
 	ft_utils/ft_strjoin.c ft_utils/ft_strlen.c ft_utils/ft_strtrim.c \
-	args_parsing.c philo_utilities.c philos_activities.c table_utilities.c
+	args_parsing.c philo_utilities.c table_utilities.c
 SRCS := ${addprefix ${SRCS_DIR}, ${SRCS_LST}}
 
 OBJS_DIR := objs/
