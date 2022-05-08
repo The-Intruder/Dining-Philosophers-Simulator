@@ -37,17 +37,6 @@ void	ft_usleep(long time_to_sleep)
 
 /* -------------------------------------------------------------------------- */
 
-void	print_safely(t_philo *philo, char *action)
-{
-	long	time;
-
-	pthread_mutex_lock(&philo->table->msg_mtx);
-	time = ft_get_usec_timestamp() - philo->table->start_time;
-	if (philo->table->allow_print == ON)
-		printf("%6ldms  %-2d %s\n", time / 1000, philo->id + 1, action);
-	pthread_mutex_unlock(&philo->table->msg_mtx);
-}
-
 /* -------------------------------------------------------------------------- */
 
 void	ft_perror(int type, char *cause)
