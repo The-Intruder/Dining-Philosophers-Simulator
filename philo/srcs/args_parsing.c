@@ -71,15 +71,14 @@ static char	**refactor_args(int argc, char **argv)
 			return (free(jnd_args), NULL);
 		ptr = jnd_args;
 		jnd_args = ft_strjoin(jnd_args, argv[i], ' ');
-		ft_free((void **)&ptr);
+		free(ptr);
 		if (jnd_args == NULL || *jnd_args == '\0')
 			return (free(jnd_args), NULL);
 	}
 	spltd_args = ft_split(jnd_args, ' ');
-	ft_free((void **)&jnd_args);
-	if (spltd_args == NULL || *spltd_args == NULL)
-		ft_free((void **)spltd_args);	// ????????????????????????????????????
-	return (spltd_args);
+	if (spltd_args != NULL && *spltd_args == NULL)
+		free_2d_arr(spltd_args);
+	return (free(jnd_args), spltd_args);
 }
 
 /* -------------------------------------------------------------------------- */

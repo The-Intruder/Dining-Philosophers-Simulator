@@ -37,11 +37,11 @@
 # define CYN	"\033[36m"
 # define GRA	"\033[37m"
 
+
 /* ----------------------------------- Enums -------------------------------- */
 enum philo_stat	{EAT = 1, SLP};
 enum args_flag	{PLS = 1, DGT};
 enum table_stat	{OFF, ON};
-enum time_type	{MSEC = 1, USEC};
 
 /* ---------------------------------- TypeDefs ------------------------------ */
 typedef unsigned int		t_uint;
@@ -66,6 +66,7 @@ typedef struct s_table {
 	long			time_to_eat;
 	long			time_to_slp;
 	long			time_to_die;
+	int				end_philos;
 	int				status;
 	int				philo_count;
 	int				count_to_eat;

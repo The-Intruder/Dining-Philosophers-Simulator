@@ -38,8 +38,10 @@ int	check_philos(t_table *table)
 			table->status = OFF;
 			if (elapsed_time > table->time_to_die )
 				printf("%-6ld %-2d died\n", elapsed_time / 1000, philo->id + 1);
+			return (0);
 		}
-		usleep(500);
+		if (usleep(100) != 0)
+			return (-1);
 	}
 	return (0);
 }
@@ -63,17 +65,17 @@ int	destroy_data(t_table *table)
 int	main(int argc, char **argv)
 {
 	t_table	table;
-	int	i;
 
 	ft_bzero(&table, sizeof(t_table));
 	table.start_time = ft_get_usec_timestamp();
 	if (init_args(&table, argc, argv) != 0)
 		return (-1);
-	check_philos(&table);
-	i = -1;
-	while (++i < table.philo_count)
-		if (pthread_detach(table.philos[i].ph_thrd) != 0)
-			return (ft_perror(2, "Thread Detaching Error"), -1);
+	if (check_philos(&table) != 0)
+		return (-1);
+	while (table.end_philos != table.philo_count)
+		usleep(100);
+	if (destroy_data(&table) != 0)
+		return (-1);
 	return (0);
 }
 
