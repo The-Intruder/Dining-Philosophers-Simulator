@@ -84,23 +84,23 @@ static char	**refactor_args(int argc, char **argv)
 
 /* -------------------------------------------------------------------------- */
 
-static int	init_vars(t_table *table, int value, int var_numb)
+static int	init_vars(t_data *data, int value, int var_numb)
 {
-	table->count_to_eat = -1;
+	data->count_to_eat = -1;
 	if (var_numb == 1)
-		table->time_to_die = (long)value * 1000;
+		data->time_to_die = (long)value * 1000;
 	else if (var_numb == 2)
-		table->time_to_eat = (long)value * 1000;
+		data->time_to_eat = (long)value * 1000;
 	else if (var_numb == 3)
-		table->time_to_slp = (long)value * 1000;
+		data->time_to_slp = (long)value * 1000;
 	else if (var_numb == 4)
-		table->count_to_eat = value;
+		data->count_to_eat = value;
 	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int	init_args(t_table *table, int argc, char **argv)
+int	init_args(t_data *data, int argc, char **argv)
 {
 	char	**new_argv;
 	int		value;
@@ -117,13 +117,13 @@ int	init_args(t_table *table, int argc, char **argv)
 		value = ft_atoi(new_argv[i]);
 		if ((i == 4 && value < 0) || (i != 4 && value <= 0))
 			return (ft_perror(1, "Invalid argument value"), -1);
-		if (init_vars(table, value, i) != 0)
+		if (init_vars(data, value, i) != 0)
 			return (-1);
 	}
 	value = ft_atoi(new_argv[0]);
 	if (value <= 0)
 		return (ft_perror(1, "Invalid argument value"), -1);
-	if (init_table(table, value) != 0)
+	if (init_data(data, value) != 0)
 		return (-1);
 	free_2d_arr(new_argv);
 	return (0);

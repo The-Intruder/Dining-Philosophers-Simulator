@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   table_utils.c                                      :+:      :+:    :+:   */
+/*   data_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnaimi <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -14,95 +14,66 @@
 
 /* -------------------------------------------------------------------------- */
 
-static void	take_forks_conditionally(t_philo *philo)
+static void	take_forks(t_data *data)
 {
-	if (philo->id % 2)
-		usleep(100);
-	pthread_mutex_lock(&philo->fork);
-	print_safely(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
-		philo->table->philo_count].fork);
-	print_safely(philo, "has taken a fork");
+	sem_wait();
 }
 
 /* -------------------------------------------------------------------------- */
 
-static void	put_forks_conditionally(t_philo *philo)
+static void	put_forks()
 {
-	pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
-		philo->table->philo_count].fork);
-	print_safely(philo, "has put a fork");
-	pthread_mutex_unlock(&philo->fork);
-	print_safely(philo, "has put a fork");
+	
 }
 
 /* -------------------------------------------------------------------------- */
 
-static void	*routine(void *ptr)
+static void	*routine(t_data *data, int id)
 {
-	t_philo	*philo;
-	t_table	*table;
-
-	philo = (t_philo *)ptr;
-	table = philo->table;
-	while (table->status)
+	while (data->)
 	{
-		take_forks_conditionally(philo);
-		print_safely(philo, "is eating");
-		ft_usleep(table->time_to_eat);
-		philo->last_meal_time = ft_get_usec_timestamp();
-		philo->eat_count++;
-		put_forks_conditionally(philo);
-		print_safely(philo, "is sleeping");
-		ft_usleep(table->time_to_slp);
-		print_safely(philo, "is thinking");
-		if (philo->eat_count == table->count_to_eat)
-			table->have_eaten += 1;
+		// take_forks(philo);
+		// print_safely(philo, "is eating");
+		// philo->last_meal_time = ft_get_usec_timestamp();
+		// ft_usleep(data->time_to_eat);
+		// philo->eat_count++;
+		// put_forks(philo);
+		// print_safely(philo, "is sleeping");
+		// ft_usleep(data->time_to_slp);
+		// print_safely(philo, "is thinking");
+		// if (philo->eat_count == data->count_to_eat)
+		// 	data->have_eaten += 1;
 	}
 	return (NULL);
 }
 
 /* -------------------------------------------------------------------------- */
 
-static int	init_philos(t_table *table)
+static int	init_philos(t_data *data)
 {
 	int	i;
 
 	i = -1;
-	while (++i < table->philo_count)
+	while (++i < data->philo_count)
 	{
-		table->philos[i].table = table;
-		table->philos[i].id = i;
-		table->philos[i].eat_count = 0;
-		table->philos[i].stat = 0;
-		if (pthread_mutex_init(&table->philos[i].fork, NULL) != 0)
-			return (ft_perror(2, "Mutex Init Failure"), -1);
-	}
-	i = -1;
-	while (++i < table->philo_count)
-	{
-		if (pthread_create(&table->philos[i].ph_thrd, NULL, &routine, \
-			(void *)&table->philos[i]) != 0)
-			return (ft_perror(2, "Thread Creation Error"), -1);
-		table->philos[i].last_meal_time = ft_get_usec_timestamp();
+		data->philos[i] = fork();
+		if (data->philos[i] < 0)
+			return (ft_perror(2, "Process Creation Failure"), -1);
+		else if (data->philos[i] == 0)
+			routine(data);
 	}
 	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int	init_table(t_table *table, int philo_count)
+int	init_data(t_data *data, int philo_count)
 {
-	table->status = ON;
-	table->allow_print = ON;
-	table->have_eaten = 0;
-	table->philo_count = philo_count;
-	table->philos = (t_philo *)ft_calloc(philo_count, sizeof(t_philo));
-	if (table->philos == NULL)
+	data->philo_count = philo_count;
+	data->philos = (pid_t *)ft_calloc(philo_count, sizeof(pid_t));
+	if (data->philos == NULL)
 		return (ft_perror(2, "Malloc Failure"), -1);
-	if (pthread_mutex_init(&table->msg_mtx, NULL) != 0)
-		return (ft_perror(2, "Mutex Init Failure"), -1);
-	if (init_philos(table) != 0)
+	if (init_philos(data) != 0)
 		return (-1);
 	return (0);
 }

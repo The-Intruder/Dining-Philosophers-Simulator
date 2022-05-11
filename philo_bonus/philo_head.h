@@ -19,11 +19,10 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
+# include <sys/sem.h>
 # include <sys/time.h>
-
-// Macros & Typedefs //
-# include <stdint.h>
-# include <stdbool.h>
+# include <sys/types.h> 
+# include <sys/wait.h>
 # include <limits.h>
 
 /* ----------------------------------- Macros ------------------------------- */
@@ -40,7 +39,7 @@
 /* ----------------------------------- Enums -------------------------------- */
 enum philo_stat	{EAT = 1, SLP};
 enum args_flag	{PLS = 1, DGT};
-enum table_stat	{OFF, ON};
+enum data_stat	{OFF, ON};
 enum time_type	{MSEC = 1, USEC};
 
 /* ---------------------------------- TypeDefs ------------------------------ */
@@ -50,28 +49,21 @@ typedef unsigned char		t_uchar;
 typedef struct timeval		t_timeval;
 
 typedef struct s_philo {
+	pthread_t		monitor_thrd;
 	long			last_meal_time;
-	struct s_table	*table;
-	pthread_mutex_t	fork;
-	pthread_t		ph_thrd;
 	int				eat_count;
-	int				id;
-	int8_t			stat;
 }	t_philo;
 
-typedef struct s_table {
-	pthread_mutex_t	msg_mtx;
-	t_philo			*philos;
-	long			start_time;
-	long			time_to_eat;
-	long			time_to_slp;
-	long			time_to_die;
-	int				status;
-	int				philo_count;
-	int				count_to_eat;
-	int				have_eaten;
-	int				allow_print;
-}	t_table;
+typedef struct s_data {
+	semun_t	*forks;
+	pid_t	*philos;
+	long	start_time;
+	long	time_to_eat;
+	long	time_to_slp;
+	long	time_to_die;
+	int		philo_count;
+	int		count_to_eat;
+}	t_data;
 
 /* --------------------------------- Prototypes ----------------------------- */
 // ft_utils
@@ -90,10 +82,10 @@ int		ft_isdigit(int c);
 int		ft_isspace(int c);
 
 // args_pars
-int		init_args(t_table *table, int argc, char **argv);
+int		init_args(t_data *data, int argc, char **argv);
 
-// table_utils
-int		init_table(t_table *table, int philo_count);
+// data_utils
+int		init_data(t_data *data, int philo_count);
 
 // philo_utilities
 long	ft_get_usec_timestamp(void);

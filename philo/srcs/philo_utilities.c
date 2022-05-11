@@ -44,7 +44,7 @@ void	print_safely(t_philo *philo, char *action)
 	pthread_mutex_lock(&philo->table->msg_mtx);
 	time = ft_get_usec_timestamp() - philo->table->start_time;
 	if (philo->table->allow_print == ON)
-		printf("%6ldms  %-2d %s\n", time / 1000, philo->id + 1, action);
+		printf("%6ld ms  %-2d %s\n", time / 1000, philo->id + 1, action);
 	pthread_mutex_unlock(&philo->table->msg_mtx);
 }
 
@@ -53,11 +53,13 @@ void	print_safely(t_philo *philo, char *action)
 void	ft_perror(int type, char *cause)
 {
 	if (type == 1)
-		write(2, RED"\033[4m\nError\033[0m\t", 20);
+		write(2, RED"\n\033[4mError\033[0m\t", 20);
 	else if (type == 2)
-		write(2, YEL"\nWarning"NNN, 17);
+		write(2, YEL"\n\033[4mWarning\033[0m\t"NNN, 22);
 	write(2, cause, ft_strlen(cause));
 	write(2, "\n\n", 2);
+	if (type == 2)
+		usleep(999999);
 }
 
 /* -------------------------------------------------------------------------- */

@@ -114,8 +114,11 @@ int	init_args(t_table *table, int argc, char **argv)
 		if (!is_valid_arg(new_argv[i]))
 			return (-1);
 		value = ft_atoi(new_argv[i]);
-		if ((i == 4 && value < 0) || (i != 4 && value <= 0))
+		if (value < 0)
 			return (ft_perror(1, "Invalid argument value"), -1);
+		else if (value <= 60)
+			ft_perror(2, "Program may have unpredicted results, " \
+				"try at your own risk");
 		if (init_vars(table, value, i) != 0)
 			return (-1);
 	}

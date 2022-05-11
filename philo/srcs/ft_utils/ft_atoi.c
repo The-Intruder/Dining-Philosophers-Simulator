@@ -31,7 +31,7 @@ int	ft_atoi(const char *str)
 	{
 		sum = (sum * 10) + (str[i++] - '0');
 		if (sum > INT_MAX || (sign && -(sum) < INT_MIN))
-			return (0);
+			return (-1);
 	}
 	if (sign)
 		sum *= -1;

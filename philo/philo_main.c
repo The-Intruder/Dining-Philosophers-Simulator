@@ -37,7 +37,8 @@ int	check_philos(t_table *table)
 			table->allow_print = OFF;
 			table->status = OFF;
 			if (elapsed_time > table->time_to_die )
-				printf("%-6ld %-2d died\n", elapsed_time / 1000, philo->id + 1);
+				printf("%6ld ms  %-2d died\n", (ft_get_usec_timestamp() - \
+					table->start_time) / 1000, philo->id + 1);
 			return (0);
 		}
 		if (usleep(100) != 0)
@@ -56,7 +57,6 @@ int	destroy_data(t_table *table)
 	while (++i < table->philo_count)
 		if (pthread_mutex_destroy(&table->philos[i].fork) != 0)
 			return (-1);
-	free(table->philos);
 	return (0);
 }
 
@@ -72,8 +72,8 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (check_philos(&table) != 0)
 		return (-1);
-	while (table.end_philos != table.philo_count)
-		usleep(100);
+	// while (table.end_philos != table.philo_count)
+	// 	usleep(10); // ???????????????????????????????????????????????????????
 	if (destroy_data(&table) != 0)
 		return (-1);
 	return (0);

@@ -18,20 +18,17 @@
 
 /* -------------------------------------------------------------------------- */
 
-
 /* -------------------------------------------------------------------------- */
-
 
 /* -------------------------------------------------------------------------- */
 
 int	main(int argc, char **argv)
 {
-	t_table	table;
-	int	i;
+	t_data	data;
 
-	ft_bzero(&table, sizeof(t_table));
-	table.start_time = ft_get_usec_timestamp();
-	if (init_args(&table, argc, argv) != 0)
+	ft_bzero(&data, sizeof(t_data));
+	data.start_time = ft_get_usec_timestamp();
+	if (init_args(&data, argc, argv) != 0)
 		return (-1);
 	return (0);
 }

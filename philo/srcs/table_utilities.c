@@ -54,7 +54,7 @@
 
 /* -------------------------------------------------------------------------- */
 
-static void	take_forks_conditionally(t_philo *philo)
+static void	take_forks(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork);
 	print_safely(philo, "has taken a fork");
@@ -63,12 +63,16 @@ static void	take_forks_conditionally(t_philo *philo)
 	print_safely(philo, "has taken a fork");
 }
 
-static void	put_forks_conditionally(t_philo *philo)
+/* -------------------------------------------------------------------------- */
+
+static void	put_forks(t_philo *philo)
 {
 	pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
 		philo->table->philo_count].fork);
 	pthread_mutex_unlock(&philo->fork);
 }
+
+/* -------------------------------------------------------------------------- */
 
 static void	*routine(void *ptr)
 {
@@ -77,16 +81,16 @@ static void	*routine(void *ptr)
 
 	philo = (t_philo *)ptr;
 	table = philo->table;
-	if (philo->id % 2 == 1)
+	if (philo->id % 2 == 0)
 		usleep(100);
-	while (table->status)
+	while (table->status == ON)
 	{
-		take_forks_conditionally(philo);
+		take_forks(philo);
 		print_safely(philo, "is eating");
-		ft_usleep(table->time_to_eat);
 		philo->last_meal_time = ft_get_usec_timestamp();
+		ft_usleep(table->time_to_eat);
+		put_forks(philo);
 		philo->eat_count++;
-		put_forks_conditionally(philo);
 		print_safely(philo, "is sleeping");
 		ft_usleep(table->time_to_slp);
 		print_safely(philo, "is thinking");
