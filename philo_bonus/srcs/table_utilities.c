@@ -32,7 +32,7 @@ static void	perform_action_on_forks(t_data *data, int action)
 
 /* -------------------------------------------------------------------------- */
 
-static void *check_death(void *ptr)
+static void	*check_death(void *ptr)
 {
 	t_data	*data;
 	long	elapsed_time;
@@ -88,8 +88,8 @@ static int	init_philos(t_data *data)
 	{
 		data->philos_procs[i] = fork();
 		if (data->philos_procs[i] < 0)
-			return (ft_perror(1, "Process Creation Failure"), \
-			kill_child_procs(data, 0, false, i + 1), -1);
+			return (ft_perror(data, 1, "Process Creation Failure"), \
+			kill_child_procs(data), -1);
 		else if (data->philos_procs[i] == 0)
 		{
 			free(data->philos_procs);
@@ -109,20 +109,20 @@ int	init_data(t_data *data)
 
 	philo_count = data->philo_count;
 	if (philo_count > SEM_VALUE_MAX)
-		return (ft_perror(1, "Philos count way too big"), -1);
+		return (ft_perror(data, 1, "Philos count way too big"), -1);
 	sem_unlink(FORKS_CUSTOM_SEM);
-	data->forks_sem	= sem_open(FORKS_CUSTOM_SEM, O_CREAT, \
+	data->forks_sem = sem_open(FORKS_CUSTOM_SEM, O_CREAT, \
 		(S_IRUSR | S_IWUSR), philo_count);
 	if (data->forks_sem == SEM_FAILED)
-		return (ft_perror(1, "Semaphore Failure"), -1);
+		return (ft_perror(data, 1, "Semaphore Failure"), -1);
 	sem_unlink(PRINT_CUSTOM_SEM);
-	data->print_sem	= sem_open(PRINT_CUSTOM_SEM, O_CREAT, \
+	data->print_sem = sem_open(PRINT_CUSTOM_SEM, O_CREAT, \
 		(S_IRUSR | S_IWUSR), 1);
 	if (data->print_sem == SEM_FAILED)
-		return (ft_perror(1, "Semaphore Failure"), -1);
+		return (ft_perror(data, 1, "Semaphore Failure"), -1);
 	data->philos_procs = (pid_t *)ft_calloc(philo_count, sizeof(pid_t));
 	if (data->philos_procs == NULL)
-		return (ft_perror(1, "Malloc Failure"), -1);
+		return (ft_perror(data, 1, "Malloc Failure"), -1);
 	if (init_philos(data) != 0)
 		return (-1);
 	return (0);

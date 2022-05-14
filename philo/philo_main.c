@@ -32,7 +32,7 @@ static int	check_philos(t_table *table)
 		{
 			table->allow_print = OFF;
 			table->status = OFF;
-			if (elapsed_time > table->time_to_die )
+			if (elapsed_time > table->time_to_die)
 				printf("%6ld ms  %-2d died\n", (ft_get_usec_timestamp() - \
 					table->start_time) / 1000, philo->id + 1);
 			return (0);

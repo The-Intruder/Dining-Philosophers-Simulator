@@ -46,7 +46,7 @@ CC		:= gcc
 CC_FLAGS	:= -Wall -Wextra -Werror -pthread
 CC_OPTS		:= -L. -lphilo
 
-NAME		:= philo
+NAME		:= philo_bonus
 MAIN		:= philo_main.c
 HEADER		:= philo_head.h
 ARCHIVE		:= libphilo.a

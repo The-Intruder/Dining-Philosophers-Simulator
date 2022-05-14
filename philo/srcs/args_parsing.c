@@ -16,26 +16,14 @@
 
 static int	is_valid_arg(char *arg)
 {
-	int	flag;
 	int	i;
 
 	if (arg == NULL || *arg == '\0')
 		return (ft_perror(1, "Invalid Argument"), 0);
 	i = -1;
-	flag = 0;
 	while (arg[++i])
-	{
-		if (ft_isspace(arg[i]))
-			flag |= SPC;
-		else if (((flag & SPC) && (flag & DGT) && ft_isdigit(arg[i])) \
-			|| !ft_isdigit(arg[i]))
+		if (!ft_isdigit(arg[i]))
 			return (ft_perror(1, "Invalid Argument"), 0);
-		else
-		{
-			flag = 0;
-			flag |= DGT;
-		}
-	}
 	return (1);
 }
 

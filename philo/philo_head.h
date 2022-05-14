@@ -38,11 +38,16 @@
 # define CYN	"\033[36m"
 # define GRA	"\033[37m"
 
-
 /* ----------------------------------- Enums -------------------------------- */
-enum philo_stat	{EAT = 1, SLP};
-enum args_flag	{SPC = 1, DGT};
-enum table_stat	{OFF, ON};
+typedef enum e_philo_stat {
+	EAT = 1,
+	SLP
+}	t_philo_stat;
+
+typedef enum e_table_stat {
+	ON,
+	OFF
+}	t_table_stat;
 
 /* ---------------------------------- TypeDefs ------------------------------ */
 typedef unsigned int		t_uint;

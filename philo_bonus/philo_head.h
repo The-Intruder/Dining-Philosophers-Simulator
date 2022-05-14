@@ -31,6 +31,7 @@
 /* ----------------------------------- Macros ------------------------------- */
 // Color Codes //
 # define NNN	"\033[0m"
+# define BLK	"\033[30m"
 # define RED	"\033[31m"
 # define GRN	"\033[32m"
 # define YEL	"\033[33m"
@@ -47,11 +48,6 @@ typedef enum e_philo_stat {
 	TAKE_FORKS = 1,
 	PUT_FORKS = 2
 }	t_philo_stat;
-
-typedef enum e_args_flag {
-	SPC = 1,
-	DGT = 2
-}	t_args_flag;
 
 typedef enum e_proc_flags {
 	HAS_CRASHED = (1 << 0),
@@ -97,7 +93,7 @@ int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
 int		ft_isspace(int c);
 
-void	kill_child_procs(t_data *data, pid_t ret_pid, bool to_kill, int limit);
+void	kill_child_procs(t_data *data);
 
 // args_pars
 int		init_args(t_data *data, int argc, char **argv);
@@ -107,7 +103,7 @@ int		init_data(t_data *data);
 
 // philo_utilities
 long	ft_get_usec_timestamp(void);
-void	ft_perror(int type, char *cause);
+void	ft_perror(t_data *data, int type, char *cause);
 void	ft_usleep(long usec_to_sleep);
 void	print_safely(t_data *data, char *action);
 

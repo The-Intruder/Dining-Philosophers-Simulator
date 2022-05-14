@@ -47,8 +47,9 @@ void	ft_usleep(long time_to_sleep)
 
 /* -------------------------------------------------------------------------- */
 
-void	ft_perror(int type, char *cause)
+void	ft_perror(t_data *data, int type, char *cause)
 {
+	sem_wait(data->print_sem);
 	if (type == 1)
 		write(2, RED"\n\033[4mError:\033[0m\t"NNN, 25);
 	else if (type == 2)

@@ -14,26 +14,16 @@
 
 /* -------------------------------------------------------------------------- */
 
-static int	is_valid_arg(char *arg)
+static int	is_valid_arg(t_data *data, char *arg)
 {
-	int	flag;
 	int	i;
 
 	if (arg == NULL || *arg == '\0')
-		return (ft_perror(1, "Invalid Argument"), 0);
+		return (ft_perror(data, 1, "Invalid Argument"), 0);
 	i = -1;
-	flag = 0;
 	while (arg[++i])
-	{
-		if ((flag & SPC) == 0 && ft_isspace(arg[i]))
-			flag = 0;
-		else if (flag == 0 && arg[i] == '+')
-			flag |= SPC;
 		if (!ft_isdigit(arg[i]))
-			return (ft_perror(1, "Invalid Argument"), 0);
-		else
-			flag |= DGT;
-	}
+			return (ft_perror(data, 1, "Invalid Argument"), 0);
 	return (1);
 }
 
@@ -62,15 +52,15 @@ int	init_args(t_data *data, int argc, char **argv)
 	int		i;
 
 	if (argc != 5 && argc != 6)
-		return (ft_perror(1, "Less/More arguments than expected"), -1);
+		return (ft_perror(data, 1, "Less/More arguments than expected"), -1);
 	i = 0;
 	while (++i < argc)
 	{
-		if (!is_valid_arg(argv[i]))
+		if (!is_valid_arg(data, argv[i]))
 			return (-1);
 		value = ft_atoi(argv[i]);
-		if (((i == 1 || i == 5) && value <= 0) || value < 0)
-			return (ft_perror(1, "Invalid argument value"), -1);
+		if (value <= 0)
+			return (ft_perror(data, 1, "Invalid argument value"), -1);
 		init_vars(data, value, i);
 	}
 	return (0);
