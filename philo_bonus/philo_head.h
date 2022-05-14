@@ -49,7 +49,7 @@ typedef enum e_philo_stat {
 }	t_philo_stat;
 
 typedef enum e_args_flag {
-	PLS = 1,
+	SPC = 1,
 	DGT = 2
 }	t_args_flag;
 
@@ -96,6 +96,8 @@ char	**ft_split(char const *s, char c);
 int		ft_atoi(const char *str);
 int		ft_isdigit(int c);
 int		ft_isspace(int c);
+
+void	kill_child_procs(t_data *data, pid_t ret_pid, bool to_kill, int limit);
 
 // args_pars
 int		init_args(t_data *data, int argc, char **argv);

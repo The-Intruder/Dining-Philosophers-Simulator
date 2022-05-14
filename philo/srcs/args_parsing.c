@@ -25,14 +25,16 @@ static int	is_valid_arg(char *arg)
 	flag = 0;
 	while (arg[++i])
 	{
-		if ((flag & PLS) == 0 && ft_isspace(arg[i]))
-			flag = 0;
-		else if (flag == 0 && arg[i] == '+')
-			flag |= PLS;
-		if (!ft_isdigit(arg[i]))
+		if (ft_isspace(arg[i]))
+			flag |= SPC;
+		else if (((flag & SPC) && (flag & DGT) && ft_isdigit(arg[i])) \
+			|| !ft_isdigit(arg[i]))
 			return (ft_perror(1, "Invalid Argument"), 0);
 		else
+		{
+			flag = 0;
 			flag |= DGT;
+		}
 	}
 	return (1);
 }
@@ -69,7 +71,7 @@ int	init_args(t_table *table, int argc, char **argv)
 		if (!is_valid_arg(argv[i]))
 			return (-1);
 		value = ft_atoi(argv[i]);
-		if (((i == 1 || i == 5) && value <= 0) || value < 0)
+		if (value <= 0)
 			return (ft_perror(1, "Invalid argument value"), -1);
 		init_vars(table, value, i);
 	}

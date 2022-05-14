@@ -18,7 +18,7 @@
 
 /* -------------------------------------------------------------------------- */
 
-static void	kill_child_procs(t_data *data, pid_t ret_pid, bool to_kill)
+void	kill_child_procs(t_data *data, pid_t ret_pid, bool to_kill, int limit)
 {
 	int	i;
 
@@ -29,7 +29,7 @@ static void	kill_child_procs(t_data *data, pid_t ret_pid, bool to_kill)
 	if (to_kill == false)
 		return ;
 	i = -1;
-	while (++i < data->philo_count)
+	while (++i < limit)
 	{
 		if (data->philos_procs[i] == ret_pid)
 			continue ;
@@ -67,7 +67,7 @@ static void	check_child_procs(t_data *data)
 		}
 		break ;
 	}
-	kill_child_procs(data, wp_ret_val, has_died);
+	kill_child_procs(data, wp_ret_val, data->philo_count, has_died);
 }
 
 /* -------------------------------------------------------------------------- */

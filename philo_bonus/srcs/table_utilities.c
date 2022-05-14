@@ -43,8 +43,9 @@ static void *check_death(void *ptr)
 		elapsed_time = ft_get_usec_timestamp() - data->last_meal_time;
 		if (elapsed_time > data->time_to_die)
 		{
-			print_safely(data, "has died");
-			sem_close(data->print_sem);
+			sem_wait(data->print_sem);
+			printf("%6ld ms  %-2d has died\n", (ft_get_usec_timestamp() \
+				- data->start_time) / 1000, data->id + 1);
 			exit(HAS_DIED);
 		}
 		usleep(100);
@@ -87,7 +88,8 @@ static int	init_philos(t_data *data)
 	{
 		data->philos_procs[i] = fork();
 		if (data->philos_procs[i] < 0)
-			return (ft_perror(1, "Process Creation Failure"), -1); // kill 0 ??
+			return (ft_perror(1, "Process Creation Failure"), \
+			kill_child_procs(data, 0, false, i + 1), -1);
 		else if (data->philos_procs[i] == 0)
 		{
 			free(data->philos_procs);
@@ -108,15 +110,11 @@ int	init_data(t_data *data)
 	philo_count = data->philo_count;
 	if (philo_count > SEM_VALUE_MAX)
 		return (ft_perror(1, "Philos count way too big"), -1);
-
-
 	sem_unlink(FORKS_CUSTOM_SEM);
 	data->forks_sem	= sem_open(FORKS_CUSTOM_SEM, O_CREAT, \
 		(S_IRUSR | S_IWUSR), philo_count);
 	if (data->forks_sem == SEM_FAILED)
 		return (ft_perror(1, "Semaphore Failure"), -1);
-
-
 	sem_unlink(PRINT_CUSTOM_SEM);
 	data->print_sem	= sem_open(PRINT_CUSTOM_SEM, O_CREAT, \
 		(S_IRUSR | S_IWUSR), 1);

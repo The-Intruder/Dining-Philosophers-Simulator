@@ -14,7 +14,7 @@
 
 /* -------------------------------------------------------------------------- */
 
-int	check_philos(t_table *table)
+static int	check_philos(t_table *table)
 {
 	int		i;
 	t_philo	*philo;
@@ -45,16 +45,15 @@ int	check_philos(t_table *table)
 
 /* -------------------------------------------------------------------------- */
 
-int	destroy_data(t_table *table)
+static void	destroy_data(t_table *table)
 {
 	int	i;
 
 	i = -1;
 	while (++i < table->philo_count)
-		if (pthread_mutex_destroy(&table->philos[i].fork) != 0)
-			return (-1);
+		pthread_mutex_destroy(&table->philos[i].fork);
+	pthread_mutex_destroy(&table->msg_mtx);
 	free(table->philos);
-	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -69,10 +68,7 @@ int	main(int argc, char **argv)
 		return (-1);
 	if (check_philos(&table) != 0)
 		return (-1);
-	while (table.end_philos != table.philo_count)
-		usleep(10);
-	if (destroy_data(&table) != 0)
-		return (-1);
+	destroy_data(&table);
 	return (0);
 }
 

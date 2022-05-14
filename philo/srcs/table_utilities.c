@@ -41,8 +41,8 @@ static void	*routine(void *ptr)
 
 	philo = (t_philo *)ptr;
 	table = philo->table;
-	if (philo->id % 2 == 0)
-		usleep(100);
+	if (philo->id % 2)
+		usleep(500);
 	while (table->status == ON)
 	{
 		take_forks(philo);
@@ -57,7 +57,6 @@ static void	*routine(void *ptr)
 		if (philo->eat_count == table->count_to_eat)
 			table->have_eaten += 1;
 	}
-	table->end_philos += 1;
 	return (NULL);
 }
 

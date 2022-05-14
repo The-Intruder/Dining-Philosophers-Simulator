@@ -25,10 +25,10 @@ static int	is_valid_arg(char *arg)
 	flag = 0;
 	while (arg[++i])
 	{
-		if ((flag & PLS) == 0 && ft_isspace(arg[i]))
+		if ((flag & SPC) == 0 && ft_isspace(arg[i]))
 			flag = 0;
 		else if (flag == 0 && arg[i] == '+')
-			flag |= PLS;
+			flag |= SPC;
 		if (!ft_isdigit(arg[i]))
 			return (ft_perror(1, "Invalid Argument"), 0);
 		else

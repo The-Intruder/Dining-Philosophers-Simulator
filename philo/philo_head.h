@@ -41,7 +41,7 @@
 
 /* ----------------------------------- Enums -------------------------------- */
 enum philo_stat	{EAT = 1, SLP};
-enum args_flag	{PLS = 1, DGT};
+enum args_flag	{SPC = 1, DGT};
 enum table_stat	{OFF, ON};
 
 /* ---------------------------------- TypeDefs ------------------------------ */
