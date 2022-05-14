@@ -14,37 +14,64 @@
 
 /* -------------------------------------------------------------------------- */
 
-static void	take_forks(t_data *data)
+static void	perform_action_on_forks(t_data *data, int action)
 {
-	sem_wait();
-}
-
-/* -------------------------------------------------------------------------- */
-
-static void	put_forks()
-{
-	
-}
-
-/* -------------------------------------------------------------------------- */
-
-static void	*routine(t_data *data, int id)
-{
-	while (data->)
+	if (action == TAKE_FORKS)
 	{
-		// take_forks(philo);
-		// print_safely(philo, "is eating");
-		// philo->last_meal_time = ft_get_usec_timestamp();
-		// ft_usleep(data->time_to_eat);
-		// philo->eat_count++;
-		// put_forks(philo);
-		// print_safely(philo, "is sleeping");
-		// ft_usleep(data->time_to_slp);
-		// print_safely(philo, "is thinking");
-		// if (philo->eat_count == data->count_to_eat)
-		// 	data->have_eaten += 1;
+		sem_wait(data->forks_sem);
+		print_safely(data, "has taken a fork");
+		sem_wait(data->forks_sem);
+		print_safely(data, "has taken a fork");
 	}
-	return (NULL);
+	else if (action == PUT_FORKS)
+	{
+		sem_post(data->forks_sem);
+		sem_post(data->forks_sem);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+static void *check_death(void *ptr)
+{
+	t_data	*data;
+	long	elapsed_time;
+
+	data = (t_data *)(ptr);
+	while (true)
+	{
+		elapsed_time = ft_get_usec_timestamp() - data->last_meal_time;
+		if (elapsed_time > data->time_to_die)
+		{
+			print_safely(data, "has died");
+			sem_close(data->print_sem);
+			exit(HAS_DIED);
+		}
+		usleep(100);
+	}
+}
+
+/* -------------------------------------------------------------------------- */
+
+static void	routine(t_data *data)
+{
+	if (pthread_create(&data->monitor_thrd, NULL, &check_death, \
+		(void *)data) != 0)
+		exit(HAS_CRASHED);
+	while (true)
+	{
+		perform_action_on_forks(data, TAKE_FORKS);
+		print_safely(data, "is eating");
+		data->last_meal_time = ft_get_usec_timestamp();
+		ft_usleep(data->time_to_eat);
+		perform_action_on_forks(data, PUT_FORKS);
+		data->eat_count++;
+		print_safely(data, "is sleeping");
+		ft_usleep(data->time_to_slp);
+		print_safely(data, "is thinking");
+		if (data->eat_count == data->count_to_eat)
+			exit(HAS_EATEN);
+	}
 }
 
 /* -------------------------------------------------------------------------- */
@@ -53,26 +80,51 @@ static int	init_philos(t_data *data)
 {
 	int	i;
 
+	data->start_time = ft_get_usec_timestamp();
+	data->eat_count = 0;
 	i = -1;
 	while (++i < data->philo_count)
 	{
-		data->philos[i] = fork();
-		if (data->philos[i] < 0)
-			return (ft_perror(2, "Process Creation Failure"), -1);
-		else if (data->philos[i] == 0)
+		data->philos_procs[i] = fork();
+		if (data->philos_procs[i] < 0)
+			return (ft_perror(1, "Process Creation Failure"), -1); // kill 0 ??
+		else if (data->philos_procs[i] == 0)
+		{
+			free(data->philos_procs);
+			data->id = i;
+			data->last_meal_time = ft_get_usec_timestamp();
 			routine(data);
+		}
 	}
 	return (0);
 }
 
 /* -------------------------------------------------------------------------- */
 
-int	init_data(t_data *data, int philo_count)
+int	init_data(t_data *data)
 {
-	data->philo_count = philo_count;
-	data->philos = (pid_t *)ft_calloc(philo_count, sizeof(pid_t));
-	if (data->philos == NULL)
-		return (ft_perror(2, "Malloc Failure"), -1);
+	int	philo_count;
+
+	philo_count = data->philo_count;
+	if (philo_count > SEM_VALUE_MAX)
+		return (ft_perror(1, "Philos count way too big"), -1);
+
+
+	sem_unlink(FORKS_CUSTOM_SEM);
+	data->forks_sem	= sem_open(FORKS_CUSTOM_SEM, O_CREAT, \
+		(S_IRUSR | S_IWUSR), philo_count);
+	if (data->forks_sem == SEM_FAILED)
+		return (ft_perror(1, "Semaphore Failure"), -1);
+
+
+	sem_unlink(PRINT_CUSTOM_SEM);
+	data->print_sem	= sem_open(PRINT_CUSTOM_SEM, O_CREAT, \
+		(S_IRUSR | S_IWUSR), 1);
+	if (data->print_sem == SEM_FAILED)
+		return (ft_perror(1, "Semaphore Failure"), -1);
+	data->philos_procs = (pid_t *)ft_calloc(philo_count, sizeof(pid_t));
+	if (data->philos_procs == NULL)
+		return (ft_perror(1, "Malloc Failure"), -1);
 	if (init_philos(data) != 0)
 		return (-1);
 	return (0);

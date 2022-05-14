@@ -14,6 +14,16 @@
 
 /* -------------------------------------------------------------------------- */
 
+void	print_safely(t_data *data, char *action)
+{
+	long	time;
+
+	sem_wait(data->print_sem);
+	time = ft_get_usec_timestamp() - data->start_time;
+	printf("%6ld ms  %-2d %s\n", time / 1000, data->id + 1, action);
+	sem_post(data->print_sem);
+}
+
 /* -------------------------------------------------------------------------- */
 
 long	ft_get_usec_timestamp(void)
@@ -37,14 +47,12 @@ void	ft_usleep(long time_to_sleep)
 
 /* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-
 void	ft_perror(int type, char *cause)
 {
 	if (type == 1)
-		write(2, RED"\033[4m\nError\033[0m\t", 20);
+		write(2, RED"\n\033[4mError:\033[0m\t"NNN, 25);
 	else if (type == 2)
-		write(2, YEL"\nWarning"NNN, 17);
+		write(2, YEL"\n\033[4mWarning:\033[0m\t"NNN, 27);
 	write(2, cause, ft_strlen(cause));
 	write(2, "\n\n", 2);
 }

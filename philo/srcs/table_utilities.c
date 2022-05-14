@@ -14,46 +14,6 @@
 
 /* -------------------------------------------------------------------------- */
 
-// static void	take_forks_conditionally(t_philo *philo)
-// {
-// 	if (philo->id % 2 == 1)
-// 	{
-// 		pthread_mutex_lock(&philo->fork);
-// 		print_safely(philo, "has taken a fork");
-// 		pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
-// 			philo->table->philo_count].fork);
-// 		print_safely(philo, "has taken a fork");
-// 	}
-// 	else if (philo->id % 2 == 0)
-// 	{
-// 		pthread_mutex_lock(&philo->table->philos[(philo->id + 1) % \
-// 			philo->table->philo_count].fork);
-// 		print_safely(philo, "has taken a fork");
-// 		pthread_mutex_lock(&philo->fork);
-// 		print_safely(philo, "has taken a fork");
-// 	}
-// }
-
-/* -------------------------------------------------------------------------- */
-
-// static void	put_forks_conditionally(t_philo *philo)
-// {
-// 	if (philo->id % 2 == 1)
-// 	{
-// 		pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
-// 			philo->table->philo_count].fork);
-// 		pthread_mutex_unlock(&philo->fork);
-// 	}
-// 	else if (philo->id % 2 == 0)
-// 	{
-// 		pthread_mutex_unlock(&philo->fork);
-// 		pthread_mutex_unlock(&philo->table->philos[(philo->id + 1) % \
-// 			philo->table->philo_count].fork);
-// 	}
-// }
-
-/* -------------------------------------------------------------------------- */
-
 static void	take_forks(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork);
@@ -132,14 +92,13 @@ static int	init_philos(t_table *table)
 
 /* -------------------------------------------------------------------------- */
 
-int	init_table(t_table *table, int philo_count)
+int	init_table(t_table *table)
 {
 	table->status = ON;
 	table->allow_print = ON;
 	table->have_eaten = 0;
 	table->end_philos = 0;
-	table->philo_count = philo_count;
-	table->philos = (t_philo *)ft_calloc(philo_count, sizeof(t_philo));
+	table->philos = (t_philo *)ft_calloc(table->philo_count, sizeof(t_philo));
 	if (table->philos == NULL)
 		return (ft_perror(2, "Malloc Failure"), -1);
 	if (pthread_mutex_init(&table->msg_mtx, NULL) != 0)

@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <string.h>
 
 // Macros & Typedefs //
 # include <stdint.h>
@@ -94,7 +95,7 @@ int		ft_isspace(int c);
 int		init_args(t_table *table, int argc, char **argv);
 
 // table_utils
-int		init_table(t_table *table, int philo_count);
+int		init_table(t_table *table);
 
 // philo_utilities
 long	ft_get_usec_timestamp(void);

@@ -14,10 +14,6 @@
 
 /* -------------------------------------------------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-
 int	check_philos(t_table *table)
 {
 	int		i;
@@ -57,6 +53,7 @@ int	destroy_data(t_table *table)
 	while (++i < table->philo_count)
 		if (pthread_mutex_destroy(&table->philos[i].fork) != 0)
 			return (-1);
+	free(table->philos);
 	return (0);
 }
 
@@ -66,14 +63,14 @@ int	main(int argc, char **argv)
 {
 	t_table	table;
 
-	ft_bzero(&table, sizeof(t_table));
+	memset(&table, 0, sizeof(t_table));
 	table.start_time = ft_get_usec_timestamp();
 	if (init_args(&table, argc, argv) != 0)
 		return (-1);
 	if (check_philos(&table) != 0)
 		return (-1);
-	// while (table.end_philos != table.philo_count)
-	// 	usleep(10); // ???????????????????????????????????????????????????????
+	while (table.end_philos != table.philo_count)
+		usleep(10);
 	if (destroy_data(&table) != 0)
 		return (-1);
 	return (0);

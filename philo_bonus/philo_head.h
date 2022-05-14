@@ -19,10 +19,13 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <pthread.h>
-# include <sys/sem.h>
+# include <string.h>
+# include <semaphore.h>
 # include <sys/time.h>
 # include <sys/types.h> 
 # include <sys/wait.h>
+# include <signal.h>
+# include <stdbool.h>
 # include <limits.h>
 
 /* ----------------------------------- Macros ------------------------------- */
@@ -36,11 +39,25 @@
 # define CYN	"\033[36m"
 # define GRA	"\033[37m"
 
+# define FORKS_CUSTOM_SEM	"FORKS_CUSTOM_SEM"
+# define PRINT_CUSTOM_SEM	"PRINT_CUSTOM_SEM"
+
 /* ----------------------------------- Enums -------------------------------- */
-enum philo_stat	{EAT = 1, SLP};
-enum args_flag	{PLS = 1, DGT};
-enum data_stat	{OFF, ON};
-enum time_type	{MSEC = 1, USEC};
+typedef enum e_philo_stat {
+	TAKE_FORKS = 1,
+	PUT_FORKS = 2
+}	t_philo_stat;
+
+typedef enum e_args_flag {
+	PLS = 1,
+	DGT = 2
+}	t_args_flag;
+
+typedef enum e_proc_flags {
+	HAS_CRASHED = (1 << 0),
+	HAS_EATEN	= (1 << 1),
+	HAS_DIED	= (1 << 2)
+}	t_proc_flags;
 
 /* ---------------------------------- TypeDefs ------------------------------ */
 typedef unsigned int		t_uint;
@@ -48,21 +65,20 @@ typedef unsigned long		t_ulong;
 typedef unsigned char		t_uchar;
 typedef struct timeval		t_timeval;
 
-typedef struct s_philo {
-	pthread_t		monitor_thrd;
-	long			last_meal_time;
-	int				eat_count;
-}	t_philo;
-
 typedef struct s_data {
-	semun_t	*forks;
-	pid_t	*philos;
-	long	start_time;
-	long	time_to_eat;
-	long	time_to_slp;
-	long	time_to_die;
-	int		philo_count;
-	int		count_to_eat;
+	pthread_t	monitor_thrd;
+	sem_t		*print_sem;
+	sem_t		*forks_sem;
+	pid_t		*philos_procs;
+	long		last_meal_time;
+	long		start_time;
+	long		time_to_eat;
+	long		time_to_slp;
+	long		time_to_die;
+	int			philo_count;
+	int			count_to_eat;
+	int			eat_count;
+	int			id;
 }	t_data;
 
 /* --------------------------------- Prototypes ----------------------------- */
@@ -85,14 +101,12 @@ int		ft_isspace(int c);
 int		init_args(t_data *data, int argc, char **argv);
 
 // data_utils
-int		init_data(t_data *data, int philo_count);
+int		init_data(t_data *data);
 
 // philo_utilities
 long	ft_get_usec_timestamp(void);
 void	ft_perror(int type, char *cause);
 void	ft_usleep(long usec_to_sleep);
-
-// philo_actvts
-void	print_safely(t_philo *philo, char *action);
+void	print_safely(t_data *data, char *action);
 
 #endif
