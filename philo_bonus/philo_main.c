@@ -23,7 +23,6 @@ void	kill_child_procs(t_data *data)
 	free(data->philos_procs);
 	write(1, BLK, 5);
 	kill(0, SIGKILL);
-	write(1, NNN, 4);
 }
 
 /* -------------------------------------------------------------------------- */

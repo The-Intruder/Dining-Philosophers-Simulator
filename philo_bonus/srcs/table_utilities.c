@@ -48,7 +48,7 @@ static void	*check_death(void *ptr)
 				- data->start_time) / 1000, data->id + 1);
 			exit(HAS_DIED);
 		}
-		usleep(100);
+		usleep(500);
 	}
 }
 
