@@ -3,9 +3,7 @@
   <a href="https://github.com/The-Intruder/Dining-Philosophers-Simulator">
     <img src="https://cdn-icons-png.flaticon.com/512/5776/5776927.png" alt="Logo" width="80" height="80">
   </a>
-
   <h3 align="center">Dining Philosophers Simulator</h3>
-
   <p align="center">
     A simulation of the classic dining philosophers problem, which is a well-known synchronization problem in computer science.
     <br/>
@@ -14,17 +12,16 @@
     .
     <a href="https://github.com/The-Intruder/Dining-Philosophers-Simulator/issues">Request Feature</a>
   </p>
+  <div align="center">
+    <a href="https://twitter.com/i_am_amine" target="_blank">
+      <img  alt="Twitter Follow"  src="https://img.shields.io/twitter/follow/i_am_amine?style=social">
+    </a>
+    <img  src="https://img.shields.io/github/repo-size/The-Intruder/Dining-Philosophers-Simulator"  alt="Repo Size">
+    <img  src="https://img.shields.io/github/last-commit/The-Intruder/Dining-Philosophers-Simulator"  alt="Last Commit">
+    <img  src="https://img.shields.io/github/license/The-Intruder/Dining-Philosophers-Simulator" alt="License" >
+    <img  src="https://img.shields.io/badge/Made%20with-❤-1f425f.svg"  alt="made-with-love">
+  </div>
 </p>
-
-<div  style="display: flex; justify-content: center;">
-<a  href="https://twitter.com/i_am_amine" target="_blank">
-  <img  alt="Twitter Follow"  src="https://img.shields.io/twitter/follow/i_am_amine?style=social">
-</a>
-<img  src="https://img.shields.io/github/repo-size/The-Intruder/Dining-Philosophers-Simulator"  alt="Repo Size">
-<img  src="https://img.shields.io/github/last-commit/The-Intruder/Dining-Philosophers-Simulator"  alt="Last Commit">
-<img  src="https://img.shields.io/github/license/The-Intruder/Dining-Philosophers-Simulator" alt="License" >
-<img  src="https://img.shields.io/badge/Made%20with-❤-1f425f.svg"  alt="made-with-love">
-</div>
 
 
 ## Table Of Contents
